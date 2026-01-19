@@ -1,165 +1,157 @@
-import React, { useMemo } from "react";
-import ReactECharts from "echarts-for-react";
-import type { KLineResult } from "@life-coordinates/core";
-import * as echarts from "echarts";
+import type { KLineResult, PaipanResult } from "@life-coordinates/core";
+import { useEffect, useRef } from "react";
 
-interface Props {
-  data: KLineResult;
-  height?: number;
-}
+export type KLineChartApi = {
+  getPngDataUrl: (pixelRatio: number) => string | null;
+};
 
-export function KLineChart({ data, height = 500 }: Props) {
-  const option = useMemo(() => {
-    const dates = data.years.map((y) => `${y.year} (${y.age}岁)`);
-    const values = data.years.map((y) => [y.open, y.close, y.low, y.high]);
-    const volumes = data.years.map((y, i) => [i, y.score, y.trend === "up" ? 1 : -1]);
+export default function KLineChart({
+  paipan,
+  kline,
+  onReady
+}: {
+  paipan: PaipanResult;
+  kline: KLineResult;
+  onReady?: (api: KLineChartApi | null) => void;
+}) {
+  const elRef = useRef<HTMLDivElement | null>(null);
+  const apiRef = useRef<KLineChartApi | null>(null);
 
-    // Calculate DaYun markLines
-    const markLines = data.daYunStages.map((stage) => ({
-      xAxis: data.years.findIndex((y) => y.age === stage.startAge),
-      label: {
-        formatter: `${stage.ganZhi}\n${stage.startAge}-${stage.endAge}`,
-        position: "start",
-      },
-    }));
+  useEffect(() => {
+    let disposed = false;
+    let chart: any = null;
+    let resizeObs: ResizeObserver | null = null;
 
-    return {
-      title: {
-        text: "人生 K 线图 (Life K-Line)",
-        left: 0,
-      },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-        },
-        formatter: (params: any) => {
-          const klineParam = params[0];
-          if (!klineParam) return "";
-          const idx = klineParam.dataIndex;
-          const yearData = data.years[idx];
-          return `
-            <div style="font-size:12px">
-              <b>${yearData.year}年 (${yearData.age}岁) ${yearData.ganZhi}</b><br/>
-              评分: ${yearData.score}<br/>
-              趋势: ${yearData.trend === "up" ? "📈 上升" : "📉 下跌"}<br/>
-              简评: ${yearData.brief}<br/>
-              ${yearData.tags.map(t => `<span style="background:#eee;padding:1px 4px;border-radius:2px;margin-right:4px">${t}</span>`).join("")}
-            </div>
-          `;
-        }
-      },
-      grid: [
-        {
-          left: "5%",
-          right: "5%",
-          height: "70%",
-        },
-        {
-          left: "5%",
-          right: "5%",
-          top: "80%",
-          height: "15%",
-        },
-      ],
-      xAxis: [
-        {
-          type: "category",
-          data: dates,
-          scale: true,
-          boundaryGap: false,
-          axisLine: { onZero: false },
-          splitLine: { show: false },
-          min: "dataMin",
-          max: "dataMax",
-        },
-        {
-          type: "category",
-          gridIndex: 1,
-          data: dates,
-          scale: true,
-          boundaryGap: false,
-          axisLine: { onZero: false },
-          axisTick: { show: false },
-          splitLine: { show: false },
-          axisLabel: { show: false },
-          min: "dataMin",
-          max: "dataMax",
-        },
-      ],
-      yAxis: [
-        {
-          scale: true,
-          splitArea: {
-            show: true,
+    async function run() {
+      if (!elRef.current) return;
+      const echarts = await import("echarts");
+      if (disposed) return;
+      chart = echarts.init(elRef.current, undefined, { renderer: "canvas" });
+
+      const categories = kline.years.map((y) => String(y.age));
+      const seriesData = kline.years.map((y) => [
+        y.open,
+        y.close,
+        Math.min(y.open, y.close), // Hide lower shadow
+        Math.max(y.open, y.close) // Hide upper shadow
+      ]);
+
+      const markLines = paipan.daYun
+        .filter((d) => d.startAge >= 1 && d.startAge <= 100)
+        .map((d) => ({
+          xAxis: String(d.startAge),
+          label: {
+            formatter: d.ganZhi,
+            color: "rgba(12, 10, 9, 0.45)",
+            fontSize: 10,
+            padding: [0, 4, 0, 4]
           },
+          lineStyle: {
+            color: "rgba(12, 10, 9, 0.15)",
+            type: "dashed"
+          }
+        }));
+
+      chart.setOption({
+        animation: false,
+        grid: { left: 40, right: 16, top: 24, bottom: 24 },
+        xAxis: {
+          type: "category",
+          data: categories,
+          boundaryGap: true,
+          axisLine: { lineStyle: { color: "rgba(120, 113, 108, 0.2)" } },
+          axisLabel: { color: "rgba(120, 113, 108, 0.6)", fontSize: 10, interval: 9 },
+          axisTick: { show: false }
         },
-        {
+        yAxis: {
           scale: true,
-          gridIndex: 1,
-          splitNumber: 2,
-          axisLabel: { show: false },
           axisLine: { show: false },
-          axisTick: { show: false },
-          splitLine: { show: false },
+          splitLine: { lineStyle: { color: "rgba(120, 113, 108, 0.1)" } },
+          axisLabel: { color: "rgba(120, 113, 108, 0.6)", fontSize: 10 }
         },
-      ],
-      dataZoom: [
-        {
-          type: "inside",
-          xAxisIndex: [0, 1],
-          start: 0,
-          end: 100,
-        },
-        {
-          show: true,
-          xAxisIndex: [0, 1],
-          type: "slider",
-          bottom: 10,
-          start: 0,
-          end: 100,
-        },
-      ],
-      series: [
-        {
-          name: "运势K线",
-          type: "candlestick",
-          data: values,
-          itemStyle: {
-            color: "#22c55e", 
-            color0: "#ef4444",
-            borderColor: "#22c55e",
-            borderColor0: "#ef4444",
-          },
-          markLine: {
-            symbol: ["none", "none"],
-            data: markLines,
-            label: {
-              formatter: "{b}",
-              position: "start"
-            },
-            lineStyle: {
-              color: "#aaa",
-              type: "dashed"
-            }
-          },
-        },
-        {
-          name: "评分",
-          type: "bar",
-          xAxisIndex: 1,
-          yAxisIndex: 1,
-          data: volumes, // We can just show score bars
-          itemStyle: {
-            color: (params: any) => {
-              const trend = data.years[params.dataIndex].trend;
-              return trend === "up" ? "#22c55e" : "#ef4444";
-            }
+        tooltip: {
+          trigger: "axis",
+          axisPointer: { type: "line", lineStyle: { color: "rgba(0,0,0,0.1)", type: "dashed" } },
+          backgroundColor: "rgba(255, 255, 255, 0.98)",
+          borderColor: "rgba(231, 229, 228, 1)",
+          borderWidth: 1,
+          padding: 12,
+          textStyle: { color: "#1c1917", fontSize: 12 },
+          extraCssText: "box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px;",
+          formatter: (params: any) => {
+            const p = Array.isArray(params) ? params[0] : params;
+            const idx = Number(p?.dataIndex ?? 0);
+            const y = kline.years[idx];
+            if (!y) return "";
+            const tags = y.tags?.length ? `｜${y.tags.join(" ")}` : "";
+            const isUp = y.close >= y.open;
+            const color = isUp ? "#22c55e" : "#ef4444";
+            
+            return `
+              <div style="font-family:Inter,system-ui,sans-serif; min-width:160px;">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+                   <span style="font-weight:600; font-size:14px; color:#1c1917;">${y.year} ${y.ganZhi}</span>
+                   <span style="font-size:11px; color:#78716c; background:#f5f5f4; padding:1px 4px; border-radius:4px;">${y.age}岁</span>
+                </div>
+                <div style="margin-bottom:8px; font-size:12px; color:#57534e; line-height:1.4;">
+                  <span style="font-weight:500; color:${color}">评分 ${y.score}</span>
+                  <span style="margin:0 4px; color:#d6d3d1">|</span>
+                  <span>${y.brief}${tags}</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:x 8px; font-size:11px; color:#a8a29e; border-top:1px solid #f5f5f4; padding-top:6px;">
+                  <div style="display:flex; justify-content:space-between;"><span>开</span> <span style="font-family:monospace; color:#57534e">${y.open}</span></div>
+                  <div style="display:flex; justify-content:space-between;"><span>收</span> <span style="font-family:monospace; color:#57534e">${y.close}</span></div>
+                  <div style="display:flex; justify-content:space-between;"><span>高</span> <span style="font-family:monospace; color:#57534e">${y.high}</span></div>
+                  <div style="display:flex; justify-content:space-between;"><span>低</span> <span style="font-family:monospace; color:#57534e">${y.low}</span></div>
+                </div>
+              </div>
+            `;
           }
         },
-      ],
-    };
-  }, [data]);
+        series: [
+          {
+            name: "人生K线",
+            type: "candlestick",
+            data: seriesData,
+            itemStyle: {
+              color: "#22c55e", // Green
+              color0: "#ef4444", // Red
+              borderColor: "#22c55e",
+              borderColor0: "#ef4444"
+            },
+            markLine: {
+              symbol: ["none", "none"],
+              animation: false,
+              label: { show: false }, // Hide default labels, use custom data labels
+              data: markLines
+            }
+          }
+        ]
+      });
 
-  return <ReactECharts option={option} style={{ height }} />;
+      apiRef.current = {
+        getPngDataUrl: (pixelRatio) => {
+          if (!chart) return null;
+          return chart.getDataURL({ type: "png", pixelRatio, backgroundColor: "#fafaf9" }) as string;
+        }
+      };
+
+      onReady?.(apiRef.current);
+
+      resizeObs = new ResizeObserver(() => chart?.resize());
+      resizeObs.observe(elRef.current);
+    }
+
+    void run();
+    return () => {
+      disposed = true;
+      onReady?.(null);
+      apiRef.current = null;
+      resizeObs?.disconnect();
+      chart?.dispose?.();
+    };
+  }, [kline, paipan, onReady]);
+
+  return <div className="luxChart" ref={elRef} />;
 }
+

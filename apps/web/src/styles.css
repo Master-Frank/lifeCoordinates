@@ -1,968 +1,2135 @@
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
-  color-scheme: light;
+  --bg: #fafaf9;
+  --text: #0c0a09;
+  --muted: rgba(68, 64, 60, 0.85);
+  --border: rgba(214, 211, 209, 0.9);
+  --ink: rgba(12, 10, 9, 0.92);
+  --gold: #ca8a04;
+  --shadow: 0 18px 50px rgba(12, 10, 9, 0.12);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: "Fira Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  background: radial-gradient(circle at top left, #eef2ff 0, #f8fafc 40%, #f9fafb 100%);
-  color: #0f172a;
-  min-height: 100vh;
-  line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  line-height: 1.5;
+  text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-/* ... existing styles ... */
+button {
+  font: inherit;
+}
 
-.app-root {
+.luxSrOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.luxPage {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background: radial-gradient(900px 420px at 50% 0%, rgba(202, 138, 4, 0.09), transparent 60%),
+    radial-gradient(700px 340px at 80% 30%, rgba(12, 10, 9, 0.04), transparent 60%),
+    var(--bg);
 }
 
-/* ... existing styles ... */
+.luxContainer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-.app-topbar {
+.luxNav {
   position: sticky;
   top: 0;
   z-index: 20;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(250, 250, 249, 0.74);
+  border-bottom: 1px solid rgba(214, 211, 209, 0.7);
+}
+
+.luxNavInner {
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 88px; /* Taller header */
-  padding: 0 40px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-  transition: all 0.2s ease;
-}
-
-.app-brand {
-  display: flex;
-  align-items: center;
   gap: 14px;
+}
+
+.luxBrand {
   text-decoration: none;
-  color: inherit;
-  transition: opacity 0.2s;
+  font-family: "Playfair Display", serif;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  font-size: 14px;
 }
 
-.app-brand:hover {
-  opacity: 0.8;
-}
-
-.app-brand-logo {
-  color: #2563eb;
-  filter: drop-shadow(0 4px 6px rgba(37, 99, 235, 0.25));
-  /* Size controlled via props, but we expect ~40px */
-}
-
-.app-brand-title {
-  font-family: "Fira Sans", sans-serif;
-  font-size: 22px; /* Larger title */
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #0f172a;
-  line-height: 1.1;
-}
-
-.app-brand-sub {
-  font-size: 13px; /* Larger sub */
-  color: #64748b;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Center Navigation */
-.nav-center {
-  display: flex;
+.luxNavLinks {
+  display: none;
+  gap: 18px;
   align-items: center;
-  gap: 48px;
-  height: 100%;
 }
 
-.nav-item {
+.luxModeNav {
   display: flex;
-  flex-direction: column;
+  gap: 18px;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding: 0 4px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.luxModeNav:empty {
+  display: none;
+}
+
+.luxModeBtn {
   text-decoration: none;
-  color: #64748b;
-  position: relative;
-  transition: color 0.2s;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  padding: 8px 2px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  border-bottom: 1px solid transparent;
+  color: rgba(12, 10, 9, 0.72);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.luxModeBtn:hover {
+  color: rgba(12, 10, 9, 0.92);
+  border-color: rgba(202, 138, 4, 0.5);
+}
+
+.luxModeBtn:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.65);
+  outline-offset: 2px;
+}
+
+.luxModeBtnActive {
+  color: rgba(12, 10, 9, 0.92);
+  border-color: rgba(202, 138, 4, 0.8);
+}
+
+.luxModeBtnDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.luxModeBtnTop {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.88);
+  line-height: 1.05;
+}
+
+.luxModeBtnSub {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.72);
+  line-height: 1.05;
+}
+
+.luxNavLink {
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.72);
+  padding: 8px 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.luxNavLink:hover {
+  color: rgba(12, 10, 9, 0.92);
+  border-color: rgba(202, 138, 4, 0.5);
+}
+
+.luxNavLinkActive {
+  color: rgba(12, 10, 9, 0.92);
+  border-color: rgba(202, 138, 4, 0.8);
+}
+
+.luxNavLinkDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.luxNavActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.luxIconBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.8);
+  background: rgba(250, 250, 249, 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
 }
 
-.nav-item:hover {
-  color: #2563eb;
+.luxIconBtn:hover {
+  background: rgba(250, 250, 249, 0.95);
+  border-color: rgba(202, 138, 4, 0.45);
 }
 
-.nav-item.active {
-  color: #2563eb;
+.luxIconBtn:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.65);
+  outline-offset: 2px;
 }
 
-.nav-item.active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px; /* Overlap border */
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #2563eb;
-  border-radius: 3px 3px 0 0;
-  box-shadow: 0 -2px 6px rgba(37, 99, 235, 0.3);
+.luxIcon {
+  width: 18px;
+  height: 18px;
+  color: rgba(12, 10, 9, 0.82);
 }
 
-.nav-item-title {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 2px;
-}
-
-.nav-item-sub {
-  font-size: 11px;
-  font-weight: 500;
-  opacity: 0.7;
-  font-family: "Fira Sans", sans-serif;
-}
-
-/* Header Buttons */
-.header-actions {
+.luxHero {
+  position: relative;
+  min-height: 620px;
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.header-btn-secondary {
-  height: 44px;
-  padding: 0 24px;
-  border-radius: 99px;
-  border: 1px solid #cbd5e1;
-  background: transparent;
-  color: #475569;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.header-btn-secondary:hover {
-  border-color: #3b82f6;
-  color: #2563eb;
-  background: rgba(59, 130, 246, 0.05);
-}
-
-.header-btn-primary {
-  height: 44px;
-  padding: 0 24px;
-  border-radius: 99px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-}
-
-.header-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-}
-
-/* ... rest of styles ... */
-
-/* Enhanced Buttons (Aurora / Soft UI) */
-.pill-button {
-  border-radius: 999px;
-  padding: 8px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid rgba(203, 213, 225, 0.6);
-  background: rgba(255, 255, 255, 0.8);
-  color: #475569;
-  backdrop-filter: blur(4px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-}
-
-.pill-button:hover {
-  border-color: #3b82f6;
-  color: #2563eb;
-  background: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-}
-
-.primary-button-large {
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
+  padding: 70px 0 56px;
   overflow: hidden;
 }
 
-.primary-button-large::after {
+.luxHero::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 250, 249, 0.96) 0%,
+    rgba(250, 250, 249, 0.92) 36%,
+    rgba(250, 250, 249, 0.55) 60%,
+    rgba(250, 250, 249, 0.12) 78%,
+    rgba(250, 250, 249, 0) 92%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.luxHeroMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(820px 460px at 18% 20%, rgba(202, 138, 4, 0.22), transparent 58%),
+    radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.08), transparent 60%),
+    linear-gradient(140deg, rgba(250, 250, 249, 1), rgba(250, 250, 249, 0.88));
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  filter: saturate(1) contrast(1.02);
+}
+
+.luxHeroInner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxHeroContent {
+  width: 100%;
+  max-width: 560px;
+  padding: 0;
+}
+
+.luxHeroKickerRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.luxHeroKickerDash {
+  width: 32px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--gold);
+  box-shadow: 0 8px 18px rgba(202, 138, 4, 0.22);
+}
+
+.luxHeroKickerText {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.84);
+}
+
+.luxHeroTitle {
+  font-family: "Playfair Display", serif;
+  margin: 20px 0 16px;
+  font-size: clamp(46px, 5.3vw, 68px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.luxHeroTitleLine {
+  display: block;
+}
+
+.luxHeroTitleEm {
+  font-style: italic;
+}
+
+.luxHeroLead {
+  margin: 0 0 28px 0;
+  max-width: 48ch;
+  color: rgba(68, 64, 60, 0.86);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.luxHeroCtas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.luxHeroCtas + .luxStatsBar {
+  margin-top: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.luxBtn {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 12px 16px;
+  cursor: pointer;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.luxBtn:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.8);
+  outline-offset: 2px;
+}
+
+.luxBtnPrimary {
+  background: linear-gradient(180deg, rgba(202, 138, 4, 1), rgba(202, 138, 4, 0.86));
+  color: rgba(12, 10, 9, 0.96);
+  box-shadow: 0 16px 40px rgba(202, 138, 4, 0.22);
+}
+
+.luxBtnInkSolid {
+  background: rgba(12, 10, 9, 0.98);
+  color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(12, 10, 9, 0.98);
+  box-shadow: 0 18px 46px rgba(12, 10, 9, 0.16);
+  padding: 12px 20px;
+}
+
+.luxBtnInkSolid:hover {
+  transform: translateY(-1px);
+  background: rgba(12, 10, 9, 0.92);
+}
+
+.luxBtnInkOutline {
+  background: transparent;
+  border-color: rgba(12, 10, 9, 0.4);
+  color: rgba(12, 10, 9, 0.86);
+  padding: 12px 20px;
+}
+
+.luxBtnInkOutline:hover {
+  background: rgba(250, 250, 249, 0.9);
+  border-color: rgba(12, 10, 9, 0.55);
+}
+
+.luxBtnPrimary:hover {
+  transform: translateY(-1px);
+}
+
+.luxBtnGhostOnDark {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.luxBtnGhostOnDark:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.36);
+}
+
+.luxBtnLight {
+  background: rgba(250, 250, 249, 0.9);
+  border-color: rgba(214, 211, 209, 0.85);
+  color: rgba(12, 10, 9, 0.9);
+}
+
+.luxBtnLight:hover {
+  border-color: rgba(202, 138, 4, 0.45);
+}
+
+.luxStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.luxStatsBar {
+  padding: 42px 0;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.55);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.luxHeroContent .luxStatsBar {
+  padding: 24px 0 0;
+  border-bottom: none;
+  background: transparent;
+}
+
+.luxStat {
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.luxStat {
+  border-left: 0;
+}
+
+.luxStat:nth-child(even) {
+  border-left: 1px solid rgba(214, 211, 209, 0.85);
+}
+
+.luxStatValue {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+
+.luxStatLabel {
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.78);
+}
+
+.luxSection {
+  padding: 64px 0;
+  scroll-margin-top: 86px;
+}
+
+.luxSectionHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.luxSectionHeaderRow {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.luxSectionTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.luxSectionKicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxH2 {
+  font-family: "Playfair Display", serif;
+  margin: 10px 0 8px;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+
+.luxP {
+  margin: 0;
+  color: var(--muted);
+  max-width: 78ch;
+}
+
+.luxGrid4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.luxProductCard {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(214, 211, 209, 0.8);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.luxProductMedia {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.luxMediaFill {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(820px 460px at 18% 20%, rgba(202, 138, 4, 0.18), transparent 58%),
+    radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.12), transparent 60%),
+    linear-gradient(140deg, rgba(250, 250, 249, 1), rgba(250, 250, 249, 0.88));
+  background-size: cover;
+  background-position: center;
+}
+
+.luxMediaFillGold {
+  background-image: radial-gradient(820px 460px at 18% 20%, rgba(202, 138, 4, 0.28), transparent 58%),
+    radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.08), transparent 60%),
+    linear-gradient(140deg, rgba(250, 250, 249, 1), rgba(250, 250, 249, 0.86));
+}
+
+.luxMediaFillInk {
+  background-image: radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.16), transparent 60%),
+    radial-gradient(820px 460px at 18% 20%, rgba(202, 138, 4, 0.16), transparent 58%),
+    linear-gradient(140deg, rgba(250, 250, 249, 1), rgba(250, 250, 249, 0.86));
+}
+
+.luxProductImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.01);
+  transition: transform 220ms ease;
+}
+
+.luxProductOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 10, 9, 0.1), rgba(12, 10, 9, 0.42));
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 220ms ease;
 }
 
-.primary-button-large:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+.luxProductCard:hover .luxProductImg {
+  transform: scale(1.05);
 }
 
-.primary-button-large:hover::after {
+.luxProductCard:hover .luxProductOverlay {
   opacity: 1;
 }
 
-.primary-button-large:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+.luxBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(12, 10, 9, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.secondary-button-large {
-  height: 52px;
-  border-radius: 14px;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  font-weight: 600;
-  font-size: 16px;
+.luxQuickView {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.03);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 220ms ease, transform 220ms ease, background 220ms ease;
 }
 
-.secondary-button-large:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-  color: #334155;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+.luxProductCard:hover .luxQuickView {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Footer */
-.app-footer {
-  margin-top: auto;
-  border-top: 1px solid #e2e8f0;
-  background: #ffffff;
-  padding: 40px 0 24px;
+.luxQuickView:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 40px;
+.luxQuickView:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.8);
+  outline-offset: 2px;
 }
 
-.footer-brand {
+.luxProductMeta {
+  padding: 14px 14px 16px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 18px;
-  color: #0f172a;
+.luxProductName {
+  font-family: "Playfair Display", serif;
+  letter-spacing: -0.01em;
 }
 
-.footer-desc {
+.luxProductPrice {
+  color: rgba(12, 10, 9, 0.78);
   font-size: 13px;
-  color: #64748b;
-  line-height: 1.6;
-  max-width: 280px;
+  letter-spacing: 0.04em;
 }
 
-.footer-links-group {
+.luxCenter {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.luxStoryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.luxStoryImage {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.luxStoryImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.luxStoryTop {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.luxStoryBig {
+  font-family: "Playfair Display", serif;
+  font-size: 32px;
+}
+
+.luxStoryBigLabel {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.9);
+}
+
+.luxStoryKicker {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxValues3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 12px;
+  margin: 18px 0;
 }
 
-.footer-col-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.luxValue {
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.footer-link {
-  display: block;
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 8px;
-  text-decoration: none;
-  transition: color 0.2s;
+.luxValueTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 14px;
 }
 
-.footer-link:hover {
-  color: #2563eb;
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 40px auto 0;
-  padding: 24px 24px 0;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.luxValueBody {
+  margin-top: 6px;
+  color: rgba(68, 64, 60, 0.85);
   font-size: 12px;
-  color: #94a3b8;
 }
 
-@media (max-width: 768px) {
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  
-  .footer-links-group {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .footer-bottom {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
-  }
-}
-
-
-.shell {
-  max-width: 1200px;
-  margin: 32px auto 40px;
-  padding: 0 24px 24px;
+.luxGrid3 {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 24px;
-  align-items: flex-start;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
 }
 
-.shell-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.shell-sidebar-title {
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #94a3b8;
-}
-
-.shell-steps {
+.luxCollectionCard {
   border-radius: 18px;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 200ms ease, border-color 200ms ease;
 }
 
-.shell-step {
+.luxCollectionCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(202, 138, 4, 0.45);
+}
+
+.luxCollectionMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.luxCollectionImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.luxCollectionScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 10, 9, 0), rgba(12, 10, 9, 0.42));
+}
+
+.luxCollectionBody {
+  padding: 14px;
+}
+
+.luxCollectionTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+}
+
+.luxCollectionNote {
+  margin-top: 8px;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxCollectionCta {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.9);
+}
+
+.luxMemberGrid {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: 1fr;
+  gap: 18px;
   align-items: center;
+}
+
+.luxBenefits {
+  display: grid;
   gap: 10px;
+  margin: 16px 0;
+}
+
+.luxBenefit {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.luxBenefitIcon {
+  width: 18px;
+  height: 18px;
+  color: rgba(202, 138, 4, 0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luxBenefitText {
+  color: rgba(68, 64, 60, 0.92);
+}
+
+.luxMemberMedia {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.luxMemberImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.luxMemberTag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
   padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(12, 10, 9, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.luxMemberTagSub {
+  position: absolute;
+  top: 54px;
+  left: 16px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(12, 10, 9, 0.35);
+  color: rgba(255, 255, 255, 0.86);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.luxMain {
+  display: block;
+}
+
+.luxPanel {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.luxPanelWide {
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.luxHeroContentWide {
+  max-width: 720px;
+}
+
+.luxPanelTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.luxPanelLead {
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: rgba(68, 64, 60, 0.85);
+  line-height: 1.5;
+}
+
+.luxAlert {
+  margin-top: 12px;
+  border: 1px solid rgba(202, 138, 4, 0.45);
+  background: rgba(202, 138, 4, 0.1);
+  color: rgba(12, 10, 9, 0.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.luxBtnBlock {
+  width: 100%;
+  justify-content: center;
+  display: inline-flex;
+  margin-top: 24px;
+}
+
+.luxForm {
+  margin-top: 20px;
+}
+
+.luxFormList {
+  display: flex;
+  flex-direction: column;
+}
+
+.luxFormRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.55);
+}
+
+.luxFormRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.luxFormLabel {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: rgba(12, 10, 9, 0.86);
+  min-width: 92px;
+}
+
+.luxFormInput {
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.luxFormInput:focus {
+  border-color: rgba(202, 138, 4, 0.55);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+}
+
+.luxFormInline {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.luxPickRow {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.55);
+  background: transparent;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  outline: none;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.luxPickRow:hover {
+  background: rgba(250, 250, 249, 0.55);
+}
+
+.luxPickRow:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.6);
+  outline-offset: 2px;
   border-radius: 12px;
 }
 
-.shell-step-indicator {
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: #64748b;
-  background: #f8fafc;
+.luxPickLabel {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: rgba(12, 10, 9, 0.86);
+  min-width: 92px;
 }
 
-.shell-step-body {
+.luxPickValue {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.shell-step-label {
-  font-size: 13px;
+.luxPickPrimary {
+  color: rgba(12, 10, 9, 0.92);
   font-weight: 500;
-  color: #0f172a;
-}
-
-.shell-step-desc {
-  font-size: 12px;
-  color: #94a3b8;
-}
-
-.shell-step-active {
-  background: linear-gradient(90deg, rgba(239, 246, 255, 0.92), rgba(248, 250, 252, 0.98));
-}
-
-.shell-step-active .shell-step-indicator {
-  border-color: #2563eb;
-  background: #2563eb;
-  color: #eff6ff;
-}
-
-.shell-step-done {
-  opacity: 0.7;
-}
-
-.shell-step-done .shell-step-indicator {
-  border-color: #22c55e;
-  background: #ecfdf3;
-  color: #16a34a;
-}
-
-.shell-sidebar-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.shell-tag {
-  border-radius: 999px;
-  border: 1px dashed #cbd5e1;
-  padding: 4px 10px;
-  font-size: 11px;
-  color: #64748b;
-  background: rgba(248, 250, 252, 0.9);
-}
-
-.shell-main {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.card {
-  background: #ffffff;
-  border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  padding: 20px 22px 22px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-}
-
-.page-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.page-hero {
-  padding-top: 22px;
-  padding-bottom: 22px;
-}
-
-.page-body {
-  padding-top: 18px;
-  padding-bottom: 18px;
-}
-
-.page-eyebrow {
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #94a3b8;
-  margin-bottom: 8px;
-}
-
-.page-title {
-  font-size: 26px;
-  line-height: 1.3;
-  margin: 0 0 8px;
-}
-
-.page-subtitle {
-  font-size: 14px;
-  color: #64748b;
-  margin: 0 0 14px;
-}
-
-.page-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.page-meta-item {
-  border-radius: 999px;
-  border: 1px solid #e2e8f0;
-  padding: 4px 10px;
-  font-size: 12px;
-  color: #475569;
-  background: #f8fafc;
-}
-
-.page-section-header {
-  margin-bottom: 12px;
-}
-
-.page-section-title {
-  font-size: 16px;
-  margin: 0 0 4px;
-}
-
-.page-section-desc {
-  font-size: 13px;
-  color: #64748b;
-  margin: 0;
-}
-
-.page-placeholder {
-  margin-top: 4px;
-  font-size: 13px;
-  color: #94a3b8;
-}
-
-label {
-  display: block;
-  font-size: 13px;
-  color: #334155;
-  margin-bottom: 6px;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #0f172a;
-  padding: 10px 12px;
-  font-size: 14px;
-  line-height: 1.4;
-  transition: border-color 0.18s ease-out, box-shadow 0.18s ease-out, background-color 0.18s ease-out;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
-  background: #ffffff;
-}
-
-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 9px 18px;
-  min-height: 40px;
-  border-radius: 999px;
-  border: 1px solid #2563eb;
-  background: linear-gradient(to right, #2563eb, #3b82f6);
-  color: #eff6ff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease-out, transform 0.12s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
-}
-
-button:hover:not(:disabled) {
-  background: linear-gradient(to right, #1d4ed8, #2563eb);
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.3);
-}
-
-button:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.24);
-}
-
-button.secondary {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
-  box-shadow: none;
-}
-
-button.secondary:hover:not(:disabled) {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.error {
-  color: #b91c1c;
-  font-size: 12px;
-  margin-top: 6px;
-}
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 760px;
-}
-
-.table th,
-.table td {
-  border-bottom: 1px solid #e2e8f0;
-  padding: 10px 8px;
-  text-align: left;
-  font-size: 13px;
-}
-
-.table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #f8fafc;
-}
-
-@media (max-width: 960px) {
-  .app-topbar {
-    padding-inline: 18px;
-  }
-
-  .shell {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding-inline: 18px;
-  }
-
-  .shell-sidebar {
-    order: 0;
-  }
-
-  .shell-main {
-    order: 1;
-  }
-}
-
-@media (max-width: 640px) {
-  .shell {
-    margin-top: 20px;
-    padding-inline: 14px;
-  }
-
-  .card {
-    border-radius: 18px;
-    padding-inline: 16px;
-  }
-
-  .page-title {
-    font-size: 22px;
-  }
-
-  .shell-steps {
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
-  }
-}
-
-/* ... existing styles ... */
-
-/* New Center Layout (Step 1 & 2) */
-.page-center-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 800px;
-  margin: 0 auto;
-  padding-bottom: 60px;
-}
-
-.hero-center {
-  text-align: center;
-  margin-bottom: 32px;
-  max-width: 640px;
-}
-
-.hero-title {
-  font-family: "Fira Sans", sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 16px;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-  font-size: 15px;
-  color: #64748b;
-  line-height: 1.7;
-  margin: 0 0 24px;
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.pill-button {
-  border-radius: 999px;
-  padding: 6px 16px;
-  font-size: 13px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #475569;
-  transition: all 0.2s;
-}
-
-.pill-button:hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  transform: translateY(-1px);
-}
-
-/* Form Card Centered */
-.form-card-centered {
-  background: #ffffff;
-  width: 100%;
-  max-width: 480px;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.12); /* High Elevation */
-  border: 1px solid #f1f5f9;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.form-card-header {
-  padding: 24px 24px 16px;
-  text-align: center;
-  border-bottom: 1px solid #f8fafc;
+.luxPickSecondary {
+  font-size: 12px;
+  color: rgba(68, 64, 60, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.form-card-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 4px;
-  color: #1e293b;
+.luxPickNote {
+  margin-left: 92px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.form-card-desc {
-  font-size: 13px;
-  color: #94a3b8;
-  margin: 0;
+.luxPickChevron {
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(68, 64, 60, 0.6);
 }
 
-.form-placeholder-body {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: #ffffff;
-}
-
-.placeholder-row {
+.luxFormGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
-.placeholder-input {
-  height: 44px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  display: flex;
-  align-items: center;
-  padding-left: 12px;
-  font-size: 14px;
-  color: #94a3b8;
+.luxFieldSpan {
+  grid-column: 1 / -1;
 }
 
-.primary-button-large {
-  height: 48px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-}
-
-.primary-button-large:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
-}
-
-.secondary-button-large {
-  height: 48px;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.secondary-button-large:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-}
-
-/* New Result Layout (Step 3) */
-.page-full-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 8px;
-}
-
-.result-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-  color: #1e293b;
-  border-left: 4px solid #2563eb;
-  padding-left: 12px;
-}
-
-.text-button {
-  background: none;
-  border: none;
-  color: #64748b;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.text-button:hover {
-  color: #2563eb;
-}
-
-.chart-container-large {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
-  min-height: 400px;
-}
-
-.dark-bar {
-  background: #0f172a; /* Dark Slate */
-  border-radius: 12px;
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #ffffff;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4); /* Deep shadow */
-}
-
-.dark-bar-label {
-  font-size: 14px;
-  opacity: 0.7;
-  font-weight: 500;
-}
-
-.dark-bar-content {
-  display: flex;
-  gap: 32px;
-}
-
-.pillar-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.pillar-label {
-  font-size: 11px;
-  opacity: 0.5;
+.luxLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: rgba(68, 64, 60, 0.86);
 }
 
-.pillar-value {
-  font-family: "Fira Sans", serif; /* Make it look classic */
-  font-size: 18px;
+.luxText {
+  width: 100%;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.luxText:focus {
+  border-color: rgba(202, 138, 4, 0.55);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+}
+
+.luxSelect {
+  width: 100%;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.luxRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 8px;
+}
+
+.luxRowTight {
+  grid-template-columns: 1fr 1fr;
+}
+
+.luxCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxCheckInline {
+  gap: 10px;
+}
+
+.luxSheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(12, 10, 9, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.luxSheet {
+  width: min(560px, 100%);
+  border: 1px solid rgba(214, 211, 209, 0.9);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 22px;
+  box-shadow: 0 22px 70px rgba(12, 10, 9, 0.22);
+  padding: 14px;
+  max-height: calc(100vh - 28px);
+  min-height: 400px;
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.luxSheetTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.luxSheetTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.luxSheetClose {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(250, 250, 249, 0.85);
+  cursor: pointer;
+}
+
+.luxSheetTabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.luxSheetTabsSlim {
+  margin-top: 10px;
+}
+
+.luxSheetTab {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: rgba(12, 10, 9, 0.86);
+}
+
+.luxSheetTab:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.luxSheetTabOn {
+  background: rgba(12, 10, 9, 0.95);
+  color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(12, 10, 9, 0.95);
+}
+
+.luxSheetRow {
+  margin-top: 10px;
+}
+
+.luxSheetActions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.luxWheelGrid {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.luxWheelCol {
+  flex: 1;
+  min-width: 92px;
+}
+
+.luxWheelHeader {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.78);
+  margin-bottom: 6px;
+}
+
+.luxWheelScroller {
+  height: 220px;
+  overflow: auto;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 90px 0;
+  scroll-snap-type: y mandatory;
+}
+
+.luxWheelItem {
+  height: 40px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  scroll-snap-align: center;
+  color: rgba(12, 10, 9, 0.86);
+  font-size: 16px;
+}
+
+.luxWheelItemOn {
+  color: rgba(12, 10, 9, 0.96);
+  background: rgba(202, 138, 4, 0.1);
   font-weight: 600;
-  letter-spacing: 0.05em;
 }
 
-.analysis-card {
-  background: #f8fafc;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
+.luxSearchInput {
+  margin-top: 8px;
+}
+
+.luxSearchStatus {
+  margin-top: 6px;
+  min-height: 20px;
+  transition: min-height 150ms ease;
+  display: flex;
+  align-items: flex-start;
+}
+
+.luxSearchResults {
+  margin-top: 12px;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.98);
+  flex-shrink: 0;
+}
+
+.luxSearchResultItem {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 150ms ease;
+  display: block;
+}
+
+.luxSearchResultItem:last-child {
+  border-bottom: 0;
+}
+
+.luxSearchResultItem:hover {
+  background: rgba(250, 250, 249, 0.8);
+}
+
+.luxSearchResultItem:active {
+  background: rgba(202, 138, 4, 0.1);
+}
+
+.luxSearchResultText {
+  color: rgba(12, 10, 9, 0.92);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.luxSearchEmpty {
+  margin-top: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 14px;
+}
+
+.luxSearchEmptyText {
+  color: rgba(68, 64, 60, 0.75);
+}
+
+.luxPickerColumns {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.luxPickerCol {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 248px;
+  flex-shrink: 0;
+}
+
+.luxPickerHead {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.78);
+  border-bottom: 1px solid rgba(214, 211, 209, 0.75);
+}
+
+.luxPickerList {
+  height: 200px;
+  overflow: auto;
+  padding: 80px 0;
+  scroll-snap-type: y mandatory;
+  scroll-padding: 80px 0;
+}
+
+.luxPickerItem {
+  width: 100%;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  padding: 0 12px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: rgba(12, 10, 9, 0.9);
+  scroll-snap-align: center;
+}
+
+.luxPickerItemOn {
+  background: rgba(202, 138, 4, 0.12);
+  font-weight: 600;
+}
+
+.luxPickerEmpty {
+  padding: 14px 12px;
+  text-align: center;
+  color: rgba(68, 64, 60, 0.78);
+}
+
+.luxToggle {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.luxToggleBtn {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(12, 10, 9, 0.86);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.luxToggleBtnOn {
+  background: rgba(12, 10, 9, 0.95);
+  color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(12, 10, 9, 0.95);
+}
+
+.luxHint {
+  margin-top: 12px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: rgba(250, 250, 249, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxSuggest {
+  position: relative;
+}
+
+.luxSuggestList {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  max-height: 240px;
+  overflow: auto;
+  z-index: 10;
+}
+
+.luxSuggestItem {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.luxSuggestItem:hover {
+  background: rgba(250, 250, 249, 0.9);
+}
+
+.luxSuggestName {
+  font-weight: 600;
+}
+
+.luxSuggestMeta {
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+}
+
+.luxSteps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.luxStep {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.luxStepActive {
+  border-color: rgba(202, 138, 4, 0.55);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+}
+
+.luxStepNum {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxStepText {
+  font-family: "Playfair Display", serif;
+}
+
+.luxStepTrail {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.luxStepTrailItem {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxStepTrailItemOn {
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxCardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.luxCard {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(12, 10, 9, 0.08), 0 2px 8px rgba(12, 10, 9, 0.04);
+  padding: 20px;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.luxCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(12, 10, 9, 0.12), 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxCardBlock {
   padding: 20px;
 }
 
-.analysis-title {
-  margin: 0 0 12px;
-  font-size: 15px;
-  color: #334155;
+.luxCardBlock .luxCardTitle {
+  padding: 0;
+  margin-bottom: 18px;
 }
 
-.analysis-body {
+.luxCardTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.6);
+  color: rgba(12, 10, 9, 0.95);
+}
+
+.luxMetaList {
+  margin-top: 4px;
+}
+
+.luxMetaRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.5);
+  transition: background 150ms ease;
+}
+
+.luxMetaRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.luxMetaRow:hover {
+  background: rgba(250, 250, 249, 0.5);
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 8px;
+}
+
+.luxMetaKey {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+  font-weight: 500;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.luxMetaVal {
   font-size: 14px;
-  color: #475569;
-  line-height: 1.6;
+  color: rgba(12, 10, 9, 0.94);
+  text-align: right;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
+.luxBig {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(12, 10, 9, 0.96);
+}
+
+.luxSmall {
+  color: rgba(68, 64, 60, 0.86);
+  font-size: 13px;
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.luxTableWrap {
+  overflow: auto;
+  padding: 8px 0 4px;
+  margin-top: 4px;
+}
+
+.luxTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.luxTable th,
+.luxTable td {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+.luxTable th {
+  background: rgba(250, 250, 249, 0.8);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+}
+
+.luxTable td {
+  font-size: 13px;
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxTdStrong {
+  font-weight: 600;
+}
+
+.luxTag {
+  display: inline-block;
+  margin-left: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  padding: 2px 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.luxChart {
+  width: 100%;
+  height: 360px;
+}
+
+.luxChartHint {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
+  background: rgba(250, 250, 249, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.luxActionsWrap {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.luxActionsStack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.luxConfirmStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.luxResultStack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.luxResultStack .luxCardGrid {
+  margin-top: 0;
+}
+
+.luxConfirmHero {
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: radial-gradient(620px 360px at 12% 16%, rgba(202, 138, 4, 0.16), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+  box-shadow: 0 14px 42px rgba(12, 10, 9, 0.1), 0 2px 8px rgba(12, 10, 9, 0.04);
+}
+
+.luxConfirmHeroTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.luxConfirmHeroKicker {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.75);
+}
+
+.luxConfirmHeroTitle {
+  margin-top: 6px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: -0.02em;
+}
+
+.luxConfirmHeroSub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(68, 64, 60, 0.78);
+}
+
+.luxConfirmHeroBadge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.82);
+  white-space: nowrap;
+}
+
+.luxConfirmMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.luxConfirmMetaItem {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.95);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.luxConfirmMetaItem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxConfirmMetaLabel {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.7);
+}
+
+.luxConfirmMetaValue {
+  margin-top: 6px;
+  font-size: 14px;
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxCardSpan {
+  grid-column: 1 / -1;
+}
+
+.luxCaseBanner {
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(214, 211, 209, 0.35);
+  background: radial-gradient(820px 420px at 18% 20%, rgba(202, 138, 4, 0.22), transparent 58%),
+    radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.6), transparent 60%),
+    linear-gradient(140deg, rgba(12, 10, 9, 0.96), rgba(12, 10, 9, 0.82));
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 60px rgba(12, 10, 9, 0.22);
+}
+
+.luxCaseTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+.luxCaseMeta {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.luxShareBox {
+  border: 1px dashed rgba(214, 211, 209, 0.75);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 16px 0 0;
+  background: rgba(250, 250, 249, 0.6);
+}
+
+.luxShareTitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxShareLink {
+  margin-top: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.luxDetails {
+  margin-top: 12px;
+}
+
+.luxDetail {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.luxDetail:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxDetailSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 150ms ease;
+}
+
+.luxDetailSummary:hover {
+  background: rgba(250, 250, 249, 0.6);
+}
+
+.luxDetailScore {
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(12, 10, 9, 0.94);
+  font-family: "Playfair Display", serif;
+}
+
+.luxDetailBody {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(214, 211, 209, 0.6);
+  background: rgba(250, 250, 249, 0.4);
+}
+
+.luxMiniTitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxSplit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.luxList {
+  margin-top: 8px;
+}
+
+.luxListRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(214, 211, 209, 0.75);
+  border-radius: 10px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.luxListRow:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(12, 10, 9, 0.05);
+  border-color: rgba(202, 138, 4, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.luxListScore {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgba(12, 10, 9, 0.94);
+  font-family: "Playfair Display", serif;
+}
+
+.luxActions {
+  padding: 16px 0 0;
+  margin-top: 4px;
+}
+
+.luxActionsStack {
+  gap: 12px;
+}
+
+.luxFooter {
+  padding: 86px 0 34px;
+  border-top: 1px solid rgba(214, 211, 209, 0.85);
+  background: var(--bg);
+}
+
+.luxFooterTop {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 42px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.75);
+}
+
+.luxFooterTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.luxFooterLead {
+  margin-top: 12px;
+  color: rgba(68, 64, 60, 0.85);
+  max-width: 56ch;
+}
+
+.luxSubscribe {
+  display: flex;
+  width: min(620px, 100%);
+  justify-content: center;
+  gap: 0;
+}
+
+.luxInput {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border-radius: 12px 0 0 12px;
+  border: 1px solid rgba(214, 211, 209, 0.9);
+  border-right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 16px;
+  outline: none;
+}
+
+.luxInput:focus {
+  border-color: rgba(202, 138, 4, 0.55);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+}
+
+.luxFooterSubscribeBtn {
+  height: 48px;
+  border-radius: 0 999px 999px 0;
+  padding: 12px 28px;
+}
+
+.luxFooterSubscribeBtn:hover {
+  transform: none;
+}
+
+.luxFooterGrid {
+  padding-top: 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 64px;
+  align-items: start;
+}
+
+.luxFooterBrandName {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+}
+
+.luxFooterBrandNote {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(107, 107, 107, 1);
+}
+
+.luxFooterColTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(26, 26, 26, 1);
+}
+
+.luxFooterCol {
+  display: grid;
+  gap: 12px;
+}
+
+.luxFooterLink {
+  text-decoration: none;
+  color: rgba(107, 107, 107, 1);
+  font-size: 14px;
+  line-height: 20px;
+  transition: color 180ms ease;
+}
+
+.luxFooterLink:hover {
+  color: rgba(26, 26, 26, 1);
+}
+
+.luxFooterBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+  padding-top: 32px;
+  border-top: 1px solid rgba(229, 229, 229, 1);
+}
+
+.luxFooterCopy {
+  color: rgba(107, 107, 107, 1);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.luxFooterSocial {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.luxSocial {
+  width: 20px;
+  height: 20px;
+  display: block;
+  text-decoration: none;
+  color: rgba(107, 107, 107, 1);
+  transition: color 180ms ease;
+}
+
+.luxSocial:hover {
+  color: rgba(26, 26, 26, 1);
+}
+
+.luxSocialIcon {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .luxBtnPrimary:hover {
+    transform: none;
+  }
+  .luxBtnInkSolid:hover {
+    transform: none;
+  }
+  .luxProductCard:hover .luxProductImg {
+    transform: none;
+  }
+}
+
+@media (min-width: 860px) {
+  .luxNavLinks {
+    display: flex;
+  }
+  .luxStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .luxStat {
+    border-left: 0;
+  }
+  .luxStat:not(:first-child) {
+    border-left: 1px solid rgba(214, 211, 209, 0.85);
+  }
+  .luxGrid4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .luxStoryGrid {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 22px;
+  }
+  .luxGrid3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .luxMemberGrid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+  .luxFormGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .luxFieldSpan {
+    grid-column: span 2;
+  }
+  .luxCardGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .luxConfirmMetaGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .luxSplit {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .luxFooterTop {
+    grid-template-columns: 1.2fr 0.8fr;
+    justify-items: stretch;
+    text-align: left;
+    align-items: end;
+  }
+  .luxSubscribe {
+    justify-content: flex-end;
+  }
+  .luxFooterGrid {
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+  .luxFooterBottom {
+    flex-direction: row;
+  }
+}

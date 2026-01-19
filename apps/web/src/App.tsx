@@ -1,550 +1,556 @@
-import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation, Link, useNavigate } from "react-router-dom";
-import type { BirthInput, KLineResult, PaipanResult } from "@life-coordinates/core";
-import { computePaipan, computeAll } from "./lib/api";
-import { saveSession, loadSession } from "./lib/storage";
-import { KLineChart } from "./components/KLineChart";
+import type { KLineResult, PaipanResult } from "@life-coordinates/core";
+import { useEffect, useMemo, useState } from "react";
+import Step1Page from "./pages/Step1";
+import Step2Page from "./pages/Step2";
+import Step3Page from "./pages/Step3";
+import { readJson } from "./lib/api";
+import { loadSession } from "./lib/storage";
+import type { SessionState } from "./lib/storage";
 
-type StepKey = "step1" | "step2" | "step3";
+type Route =
+  | { name: "home" }
+  | { name: "kline" }
+  | { name: "confirm" }
+  | { name: "result" }
+  | { name: "share"; id: string };
 
-function Logo({ className, size = 28 }: { className?: string; size?: number }) {
+function parseRoute(hash: string): Route {
+  const clean = hash.replace(/^#/, "");
+  const path = clean.startsWith("/") ? clean : "/";
+  if (path === "/kline") return { name: "kline" };
+  if (path === "/confirm") return { name: "confirm" };
+  if (path === "/result") return { name: "result" };
+  if (path.startsWith("/share/")) {
+    const id = path.replace("/share/", "").trim();
+    if (id) return { name: "share", id };
+  }
+  return { name: "home" };
+}
+
+function useHashRoute() {
+  const [route, setRoute] = useState<Route>(() => parseRoute(window.location.hash));
+  useEffect(() => {
+    const onChange = () => setRoute(parseRoute(window.location.hash));
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+  }, []);
+  return route;
+}
+
+function go(path: string) {
+  window.location.hash = path;
+}
+
+function IconSearch() {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <rect width="32" height="32" rx="8" fill="currentColor" fillOpacity="0.1" />
-      <path d="M7 18L12 23L19 10L25 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M19 10V24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+    <svg className="luxIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M16.4 16.4L21 21" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
 
-function Footer() {
+function IconUser() {
   return (
-    <footer className="app-footer no-print">
-      <div className="footer-content">
-        <div className="footer-brand">
-          <div className="footer-logo">
-            <Logo size={24} />
-            <span>人生坐标</span>
-          </div>
-          <div className="footer-desc">
-            结合传统八字命理与现代数据可视化，探索人生起伏轨迹，把握关键决策时机。
-          </div>
-        </div>
-        <div className="footer-links-group">
-          <div>
-            <div className="footer-col-title">产品</div>
-            <Link to="/" className="footer-link">八字排盘</Link>
-            <Link to="/result" className="footer-link">人生K线</Link>
-            <Link to="/" className="footer-link">使用教程</Link>
-          </div>
-          <div>
-            <div className="footer-col-title">关于</div>
-            <a href="#" className="footer-link">关于我们</a>
-            <a href="#" className="footer-link">隐私政策</a>
-            <a href="#" className="footer-link">服务条款</a>
-          </div>
-          <div>
-            <div className="footer-col-title">资源</div>
-            <a href="https://6tail.cn/calendar/api.html" target="_blank" rel="noreferrer" className="footer-link">lunar-javascript</a>
-            <a href="#" className="footer-link">命理知识库</a>
-          </div>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <div>© 2024 Life Coordinates. All rights reserved.</div>
-        <div style={{ display: "flex", gap: 16 }}>
-          <span>Designed with AI Skills</span>
-        </div>
-      </div>
-    </footer>
+    <svg className="luxIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
   );
 }
 
-const steps: { key: StepKey; label: string; description: string; path: string }[] = [
-  { key: "step1", label: "填写出生信息", description: "基本资料与出生信息", path: "/" },
-  { key: "step2", label: "确认命盘", description: "四柱与概要校对", path: "/confirm" },
-  { key: "step3", label: "人生K线", description: "走势与阶段解读", path: "/result" }
-];
-
-function useCurrentStep(): StepKey | null {
-  const loc = useLocation();
-  if (loc.pathname === "/") return "step1";
-  if (loc.pathname === "/confirm") return "step2";
-  if (loc.pathname === "/result") return "step3";
-  return null;
+function IconBag() {
+  return (
+    <svg className="luxIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 7h10l1 14H6L7 7z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
 }
 
-function LayoutShell({ children }: { children: React.ReactNode }) {
-  const location = useLocation();
-  const current = useCurrentStep();
-  
+function IconInstagram() {
   return (
-    <div className="app-root">
-      <header className="app-topbar no-print">
-        <div className="app-topbar-left">
-          <Link to="/" className="app-brand">
-            <Logo className="app-brand-logo" size={42} />
-            <div className="app-brand-text" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: 38, paddingBottom: 2 }}>
-              <span className="app-brand-title" style={{ fontSize: 20, lineHeight: 1 }}>人生坐标</span>
-              <span className="app-brand-sub" style={{ fontSize: 10, lineHeight: 1 }}>LIFE COORDINATES</span>
-            </div>
-          </Link>
-        </div>
-        
-        <div className="nav-center">
-          <Link to="/" className={`nav-item ${location.pathname === '/' || location.pathname === '/step1' ? 'active' : ''}`}>
-            <span className="nav-item-title">势能图</span>
-            <span className="nav-item-sub">人生K线</span>
-          </Link>
-          <div className="nav-item disabled" style={{ cursor: "not-allowed", opacity: 0.5 }}>
-            <span className="nav-item-title">星盘</span>
-            <span className="nav-item-sub">紫微斗数</span>
-          </div>
-          <div className="nav-item disabled" style={{ cursor: "not-allowed", opacity: 0.5 }}>
-            <span className="nav-item-title">抉择矩阵</span>
-            <span className="nav-item-sub">塔罗牌</span>
-          </div>
-        </div>
+    <svg className="luxSocialIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M17.5 6.5h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-        <div className="header-actions">
-          <button className="header-btn-secondary">登录</button>
-          <button className="header-btn-primary">注册</button>
-        </div>
-      </header>
-      <div className="shell">
-        <aside className="shell-sidebar no-print">
-          <div className="shell-sidebar-title">测算流程</div>
-          <div className="shell-steps">
-            {steps.map((step, index) => {
-              const active = step.key === current;
-              const done = current && steps.findIndex((s) => s.key === current) > index;
-              return (
-                <div key={step.key} className={active ? "shell-step shell-step-active" : done ? "shell-step shell-step-done" : "shell-step"}>
-                  <div className="shell-step-indicator">
-                    <span>{index + 1}</span>
-                  </div>
-                  <div className="shell-step-body">
-                    <div className="shell-step-label">{step.label}</div>
-                    <div className="shell-step-desc">{step.description}</div>
-                  </div>
+function IconFacebook() {
+  return (
+    <svg className="luxSocialIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 8h2V5h-2c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h2.2l.8-3H13V9c0-.6.4-1 1-1z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function IconPinterest() {
+  return (
+    <svg className="luxSocialIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 .1-2.9l1.3-5.5s-.3-.7-.3-1.8c0-1.7 1-3 2.2-3 1 0 1.5.8 1.5 1.7 0 1-.7 2.6-1 4-.3 1.1.6 2 1.7 2 2 0 3.6-2.1 3.6-5.2 0-2.7-2-4.6-4.7-4.6-3.2 0-5.1 2.4-5.1 4.9 0 1 .4 2 .8 2.5.1.1.1.2.1.4l-.3 1.2c-.1.4-.3.5-.7.3-1.3-.6-2.1-2.4-2.1-3.9 0-3.2 2.3-6.1 6.7-6.1 3.5 0 6.2 2.5 6.2 5.9 0 3.5-2.2 6.3-5.2 6.3-1 0-2-.5-2.3-1.1l-.6 2.2c-.2.9-.8 2-1.2 2.6A10 10 0 1 0 12 2z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function IconYouTube() {
+  return (
+    <svg className="luxSocialIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M21.5 7.2a3 3 0 0 0-2.1-2.1C17.6 4.7 12 4.7 12 4.7s-5.6 0-7.4.4A3 3 0 0 0 2.5 7.2 31.3 31.3 0 0 0 2.5 12s0 3.1.4 4.8a3 3 0 0 0 2.1 2.1c1.8.4 7 .4 7 .4s5.6 0 7.4-.4a3 3 0 0 0 2.1-2.1c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8z"
+        fill="currentColor"
+      />
+      <path d="M10.2 9.4l5 2.6-5 2.6V9.4z" fill="#fff" />
+    </svg>
+  );
+}
+
+function HomePage({ go }: { go: (path: string) => void }) {
+  return (
+    <main className="luxMain">
+      <section className="luxHero" aria-label="Home">
+        <div className="luxHeroMedia" aria-hidden="true" />
+        <div className="luxContainer luxHeroInner">
+          <div className="luxHeroContent">
+            <div className="luxHeroKickerRow">
+              <span className="luxHeroKickerDash" aria-hidden="true" />
+              <span className="luxHeroKickerText">LIFE COORDINATES</span>
+            </div>
+            <h1 className="luxHeroTitle">
+              <span className="luxHeroTitleLine">人生坐标</span>
+              <span className="luxHeroTitleLine luxHeroTitleEm">Life Coordinates</span>
+            </h1>
+            <p className="luxHeroLead">将八字命盘转化为“百年K线”，直观展示起伏、高峰、低谷与关键转折期。</p>
+
+            <div className="luxHeroCtas">
+              <button type="button" className="luxBtn luxBtnInkSolid" onClick={() => go("#/kline")}>
+                开始生成
+              </button>
+              <button type="button" className="luxBtn luxBtnInkOutline" onClick={() => go("#/kline")}>
+                势能图（人生K线）
+              </button>
+            </div>
+
+            <div className="luxStatsBar">
+              <div className="luxStats" aria-label="Highlights">
+                <div className="luxStat">
+                  <div className="luxStatValue">1–100</div>
+                  <div className="luxStatLabel">虚岁区间</div>
                 </div>
-              );
-            })}
-          </div>
-          <div className="shell-sidebar-footer">
-            <div className="shell-tag">真太阳时修正</div>
-            <div className="shell-tag">四柱八字</div>
-            <div className="shell-tag">人生K线</div>
-          </div>
-        </aside>
-        <main className="shell-main">{children}</main>
-      </div>
-      <Footer />
-    </div>
-  );
-}
-
-function Step1Page() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState<BirthInput>({
-    name: "",
-    gender: "male",
-    calendar: "solar",
-    date: { year: 1990, month: 1, day: 1, isLeapMonth: false },
-    time: { mode: "exact", hour: 12, minute: 0 },
-    location: { province: "北京", city: "北京", longitude: 116.46 }
-  });
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const res = await computePaipan(form);
-      saveSession({ input: form, paipan: res.paipan });
-      navigate("/confirm");
-    } catch (e) {
-      alert("Error: " + String(e));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="page-center-layout">
-      <div className="hero-center">
-        <h1 className="hero-title">洞悉命运起伏 预见人生轨迹</h1>
-        <p className="hero-subtitle">
-          结合传统八字命理与现代金融数据可视化，我们将您的一生运势绘制成类似股票行情的K线图。助您发现人生牛市，规避风险熊市，把握关键转折点。
-        </p>
-        <div className="hero-actions">
-          <button className="secondary pill-button">📖 查看使用教程</button>
-        </div>
-      </div>
-
-      <div className="form-card-centered">
-        <div className="form-card-header">
-          <h2 className="form-card-title">八字排盘</h2>
-          <p className="form-card-desc">请输入出生信息以生成分析</p>
-        </div>
-        
-        <div className="form-placeholder-body">
-          <div className="placeholder-row">
-            <div>
-              <label>姓名（可选）</label>
-              <input 
-                type="text" 
-                value={form.name} 
-                onChange={e => setForm({...form, name: e.target.value})}
-                placeholder="请输入姓名"
-              />
-            </div>
-            <div>
-              <label>性别</label>
-              <select 
-                value={form.gender} 
-                onChange={e => setForm({...form, gender: e.target.value as "male" | "female"})}
-              >
-                <option value="male">男</option>
-                <option value="female">女</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="placeholder-row">
-            <div>
-              <label>历法</label>
-              <select 
-                value={form.calendar} 
-                onChange={e => setForm({...form, calendar: e.target.value as "solar" | "lunar"})}
-              >
-                <option value="solar">公历</option>
-                <option value="lunar">农历</option>
-              </select>
-            </div>
-            <div>
-              <label>出生日期</label>
-              <div style={{ display: 'flex', gap: 4 }}>
-                <input 
-                  type="number" 
-                  value={form.date.year} 
-                  onChange={e => setForm({...form, date: {...form.date, year: parseInt(e.target.value)}})}
-                  style={{ width: '33%' }}
-                />
-                <input 
-                  type="number" 
-                  value={form.date.month} 
-                  onChange={e => setForm({...form, date: {...form.date, month: parseInt(e.target.value)}})}
-                  style={{ width: '33%' }}
-                />
-                <input 
-                  type="number" 
-                  value={form.date.day} 
-                  onChange={e => setForm({...form, date: {...form.date, day: parseInt(e.target.value)}})}
-                  style={{ width: '33%' }}
-                />
+                <div className="luxStat">
+                  <div className="luxStatValue">1Y</div>
+                  <div className="luxStatLabel">每年一根K线</div>
+                </div>
+                <div className="luxStat">
+                  <div className="luxStatValue">10Y</div>
+                  <div className="luxStatLabel">十年大运分段</div>
+                </div>
+                <div className="luxStat">
+                  <div className="luxStatValue">3</div>
+                  <div className="luxStatLabel">输入→确认→结果</div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="placeholder-row">
+      <section className="luxSection" aria-label="Core">
+        <div className="luxContainer">
+          <div className="luxSectionHeader">
             <div>
-              <label>时间模式</label>
-              <select 
-                value={form.time.mode} 
-                onChange={e => {
-                  const mode = e.target.value as "exact" | "segment";
-                  if (mode === "exact") {
-                    setForm({...form, time: { mode: "exact", hour: 12, minute: 0 }});
-                  } else {
-                    setForm({...form, time: { mode: "segment", label: "子时" }});
-                  }
-                }}
-              >
-                <option value="exact">精确时间</option>
-                <option value="segment">时辰/模糊</option>
-              </select>
-            </div>
-            <div>
-              <label>出生时间</label>
-              {form.time.mode === "exact" ? (
-                 <div style={{ display: 'flex', gap: 4 }}>
-                 <input 
-                   type="number" 
-                   value={form.time.hour} 
-                   onChange={e => setForm({...form, time: { mode: "exact", hour: parseInt(e.target.value), minute: (form.time as any).minute }})}
-                   style={{ width: '50%' }}
-                 />
-                 <input 
-                   type="number" 
-                   value={(form.time as any).minute} 
-                   onChange={e => setForm({...form, time: { mode: "exact", hour: (form.time as any).hour, minute: parseInt(e.target.value) }})}
-                   style={{ width: '50%' }}
-                 />
-               </div>
-              ) : (
-                <select 
-                  value={(form.time as any).label}
-                  onChange={e => setForm({...form, time: { mode: "segment", label: e.target.value as any }})}
-                >
-                  {["子时", "丑时", "寅时", "卯时", "辰时", "巳时", "午时", "未时", "申时", "酉时", "戌时", "亥时"].map(t => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              )}
+              <div className="luxSectionKicker">CORE</div>
+              <div className="luxSectionTitle">专业排盘 × 量化建模 × K线可视化</div>
             </div>
           </div>
 
-          <div>
-            <label>出生地点 (省/市/经度)</label>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <input 
-                type="text" 
-                placeholder="省份" 
-                value={form.location.province}
-                onChange={e => setForm({...form, location: {...form.location, province: e.target.value}})}
-              />
-              <input 
-                type="text" 
-                placeholder="城市" 
-                value={form.location.city}
-                onChange={e => setForm({...form, location: {...form.location, city: e.target.value}})}
-              />
-              <input 
-                type="number" 
-                placeholder="经度" 
-                value={form.location.longitude}
-                onChange={e => setForm({...form, location: {...form.location, longitude: parseFloat(e.target.value)}})}
-                step="0.01"
-              />
-            </div>
-          </div>
-
-          <button className="primary-button-large" onClick={handleSubmit} disabled={loading}>
-            {loading ? "计算中..." : "✨ 生成排盘预览"}
-          </button>
-        </div>
-      </div>
-      
-      <div style={{ textAlign: "center", marginTop: 24, fontSize: 13, color: "#94a3b8" }}>
-        支持公历/农历自动转换 · 自动真太阳时修正
-      </div>
-    </div>
-  );
-}
-
-function Step2Page() {
-  const navigate = useNavigate();
-  const [session, setSession] = useState<{ input: BirthInput; paipan?: PaipanResult } | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const s = loadSession();
-    if (!s || !s.paipan) {
-      navigate("/");
-    } else {
-      setSession(s);
-    }
-  }, [navigate]);
-
-  if (!session || !session.paipan) return <div>Loading...</div>;
-
-  const { paipan } = session;
-
-  const handleConfirm = async () => {
-    setLoading(true);
-    try {
-      const res = await computeAll(session.input);
-      saveSession({ ...session, kline: res.kline });
-      navigate("/result");
-    } catch (e) {
-      alert("Error: " + String(e));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="page-center-layout">
-      <div className="hero-center">
-        <h1 className="hero-title">确认您的命盘信息</h1>
-        <p className="hero-subtitle">
-          请仔细核对以下信息，确保真太阳时与四柱八字准确无误。
-        </p>
-      </div>
-
-      <div className="form-card-centered" style={{ maxWidth: 600 }}>
-        <div className="form-card-header">
-          <h2 className="form-card-title">命盘预览</h2>
-          <p className="form-card-desc">四柱八字与基本盘面</p>
-        </div>
-        <div className="form-placeholder-body">
-          <div className="table-container">
-            <table className="table" style={{ minWidth: 'auto' }}>
-              <thead>
-                <tr>
-                  <th>柱</th>
-                  <th>天干</th>
-                  <th>地支</th>
-                  <th>十神</th>
-                  <th>藏干</th>
-                  <th>纳音</th>
-                </tr>
-              </thead>
-              <tbody>
-                {["year", "month", "day", "hour"].map((key) => {
-                  const p = paipan.fourPillars[key as "year"];
-                  return (
-                    <tr key={key}>
-                      <td>{{year: "年柱", month: "月柱", day: "日柱", hour: "时柱"}[key]}</td>
-                      <td style={{ fontWeight: "bold", color: p.gan === paipan.fourPillars.dayMaster.gan ? "red" : "inherit" }}>{p.gan}</td>
-                      <td>{p.zhi}</td>
-                      <td>{p.ganTenGod}</td>
-                      <td>{p.hiddenStems.join("")}</td>
-                      <td>{p.naYin}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          
-          <div style={{ padding: 12, background: "#f8fafc", borderRadius: 8, fontSize: 13, lineHeight: 1.6 }}>
-            <div><b>真太阳时:</b> {paipan.solar.correctedYmdHms}</div>
-            <div><b>经度修正:</b> {paipan.solar.longitudeDeltaMinutes.toFixed(1)} 分钟</div>
-            <div><b>日主强弱:</b> {paipan.overall.dayMasterStrength}</div>
-            <div><b>喜用神:</b> {paipan.overall.favorableElements.join("、")}</div>
-          </div>
-
-          <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-            <button className="secondary-button-large" style={{ flex: 1 }} onClick={() => navigate("/")}>返回修改</button>
-            <button className="primary-button-large" style={{ flex: 1 }} onClick={handleConfirm} disabled={loading}>
-              {loading ? "计算中..." : "确认生成人生K线"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Step3Page() {
-  const navigate = useNavigate();
-  const [session, setSession] = useState<{ kline?: KLineResult; paipan?: PaipanResult } | null>(null);
-
-  useEffect(() => {
-    const s = loadSession();
-    if (!s || !s.kline || !s.paipan) {
-      navigate("/");
-    } else {
-      setSession(s);
-    }
-  }, [navigate]);
-
-  if (!session || !session.kline || !session.paipan) return <div>Loading...</div>;
-  const { kline, paipan } = session;
-
-  return (
-    <div className="page-full-layout">
-      <header className="result-header">
-        <h1 className="result-title">命盘分析报告</h1>
-        <button className="text-button" onClick={() => navigate("/")}>← 重新排盘</button>
-      </header>
-
-      <div className="chart-container-large">
-         <KLineChart data={kline} height={450} />
-      </div>
-
-      <div className="dark-bar">
-        <div className="dark-bar-label">四柱八字</div>
-        <div className="dark-bar-content">
-          {["year", "month", "day", "hour"].map((key) => {
-            const p = paipan.fourPillars[key as "year"];
-            return (
-              <div className="pillar-item" key={key}>
-                <span className="pillar-label">{{year: "年柱", month: "月柱", day: "日柱", hour: "时柱"}[key]}</span>
-                <span className="pillar-value">{p.gan}{p.zhi}</span>
+          <div className="luxGrid4">
+            {[
+              {
+                badge: "VERIFY",
+                title: "专业排盘（lunar-javascript）",
+                note: "公历/农历转换、节气定月、四柱干支推算，结果可核验。"
+              },
+              {
+                badge: "SOLAR",
+                title: "真太阳时修正",
+                note: "基于出生地经度修正时间，减少边界误差影响。"
+              },
+              {
+                badge: "MODEL",
+                title: "年度评分量化",
+                note: "本命盘×20%｜十年大运×35%｜流年作用×30%｜冲合刑害×10%｜格局修正×5%。"
+              },
+              {
+                badge: "VIEW",
+                title: "百年K线与阶段洞察",
+                note: "每年OHLC一根K线；每10年大运虚线分隔并标注干支。"
+              }
+            ].map((card) => (
+              <div key={card.title} className="luxProductCard">
+                <div className="luxProductMedia" aria-hidden="true">
+                  <div className="luxMediaFill" />
+                  <div className="luxProductOverlay" />
+                  <div className="luxBadge">{card.badge}</div>
+                </div>
+                <div className="luxProductMeta">
+                  <div className="luxProductName">{card.title}</div>
+                </div>
+                <div className="luxProductMeta" style={{ paddingTop: 0 }}>
+                  <div className="luxProductPrice">{card.note}</div>
+                </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="analysis-card">
-        <h3 className="analysis-title">📄 命理总评</h3>
-        <div className="analysis-body">
-          <p>{kline.insight.summary}</p>
-          <div style={{ marginTop: 12 }}>
-            <b>关键转折点：</b>
-            {kline.insight.peaks.map(p => `${p.year}年(${p.age}岁)`).join("、")}
+            ))}
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="luxSection" aria-label="Principles">
+        <div className="luxContainer">
+          <div className="luxStoryGrid">
+            <div className="luxStoryImage" aria-hidden="true">
+              <div className="luxMediaFill luxMediaFillGold" />
+            </div>
+            <div>
+              <div className="luxStoryTop">
+                <div className="luxStoryBig">01</div>
+                <div className="luxStoryBigLabel">PRINCIPLES</div>
+              </div>
+              <div className="luxStoryKicker">理性克制 · 可验证 · 可保存</div>
+              <h2 className="luxH2">把“人生走势”做成可回看的结构化输出</h2>
+              <p className="luxP">
+                排盘必须专业准确，避免夸张式文案；评分模型、K线规则与输出结构保持一致，让结果能被对照、保存、分享。
+              </p>
+
+              <div className="luxValues3" aria-label="Values">
+                {[
+                  { title: "专业", body: "排盘基于库实现，输出字段完整、表格清晰。" },
+                  { title: "克制", body: "描述聚焦规则与提示，不夸张、不迷信。" },
+                  { title: "可回看", body: "支持导出PDF/图片与只读分享链接。" }
+                ].map((v) => (
+                  <div key={v.title} className="luxValue">
+                    <div className="luxValueTitle">{v.title}</div>
+                    <div className="luxValueBody">{v.body}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="luxSection" aria-label="Flow">
+        <div className="luxContainer">
+          <div className="luxSectionHeader">
+            <div>
+              <div className="luxSectionKicker">FLOW</div>
+              <div className="luxSectionTitle">严格三步交互</div>
+            </div>
+          </div>
+
+          <div className="luxGrid3">
+            {[
+              { title: "Step 1｜信息输入", note: "姓名、性别、历法、公/农历日期、时间、出生地（经度）。" },
+              { title: "Step 2｜排盘确认", note: "四柱与扩展字段完整展示：十神、藏干、神煞、纳音、空亡等。" },
+              { title: "Step 3｜结果展示", note: "百年K线 + 十年大运分析 + 深度解读 + 导出与分享。" }
+            ].map((c) => (
+              <div key={c.title} className="luxCollectionCard" onClick={() => go("#/kline")} role="button" tabIndex={0}>
+                <div className="luxCollectionMedia" aria-hidden="true">
+                  <div className="luxMediaFill luxMediaFillInk" />
+                  <div className="luxCollectionScrim" />
+                </div>
+                <div className="luxCollectionBody">
+                  <div className="luxCollectionTitle">{c.title}</div>
+                  <div className="luxCollectionNote">{c.note}</div>
+                  <div className="luxCollectionCta">开始体验 →</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="luxSection" aria-label="Export">
+        <div className="luxContainer">
+          <div className="luxMemberGrid">
+            <div>
+              <div className="luxSectionKicker">OUTPUT</div>
+              <h2 className="luxH2">导出与保存</h2>
+              <p className="luxP">支持导出 PDF 报告、导出高清K线图片，并生成只读分享链接，便于展示与复盘。</p>
+              <div className="luxBenefits" aria-label="Benefits">
+                {[
+                  "导出 PDF（浏览器打印）",
+                  "导出高清图片（K线）",
+                  "生成只读分享链接"
+                ].map((t) => (
+                  <div key={t} className="luxBenefit">
+                    <div className="luxBenefitIcon">✓</div>
+                    <div className="luxBenefitText">{t}</div>
+                  </div>
+                ))}
+              </div>
+              <button type="button" className="luxBtn luxBtnInkSolid" onClick={() => go("#/kline")}>
+                生成我的命盘
+              </button>
+            </div>
+            <div className="luxMemberMedia" aria-hidden="true">
+              <div className="luxMediaFill" />
+              <div className="luxMemberTag">EXPORT</div>
+              <div className="luxMemberTagSub">SHARE · SAVE</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 
-function SharePage() {
-  return (
-    <div className="page-stack">
-      <section className="card page-hero">
-        <div className="page-eyebrow">Share</div>
-        <h1 className="page-title">分享结果的专属只读页面</h1>
-        <p className="page-subtitle">后续会在这里重新接入分享结果展示与图表，只读、安全、可回看。</p>
-      </section>
-      <section className="card page-body">
-        <header className="page-section-header">
-          <h2 className="page-section-title">分享内容区域</h2>
-          <p className="page-section-desc">将复用现有 /share/:id 接口返回的 paipan 与 kline 结构。</p>
-        </header>
-        <div className="page-placeholder">分享视图的布局会在这里重新设计，包括标题、K线和基础说明。</div>
-      </section>
-    </div>
-  );
+function SharePage({ id, go }: { id: string; go: (path: string) => void }) {
+  const [busy, setBusy] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [payload, setPayload] = useState<{ paipan: PaipanResult; kline: KLineResult } | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    setBusy(true);
+    setError(null);
+    void (async () => {
+      try {
+        const res = await readJson<{ paipan: PaipanResult; kline: KLineResult }>(`/api/share/${encodeURIComponent(id)}`);
+        if (!alive) return;
+        setPayload(res);
+      } catch (err: any) {
+        if (!alive) return;
+        setError(typeof err?.message === "string" ? err.message : "分享内容不存在或已失效");
+      } finally {
+        if (alive) setBusy(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  if (busy) {
+    return (
+      <main className="luxMain">
+        <section className="luxSection">
+          <div className="luxContainer">
+            <div className="luxPanel">
+              <div className="luxPanelTitle">加载分享内容中...</div>
+              <div className="luxPanelLead">请稍候。</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (error || !payload) {
+    return (
+      <main className="luxMain">
+        <section className="luxSection">
+          <div className="luxContainer">
+            <div className="luxPanel">
+              <div className="luxPanelTitle">无法打开分享</div>
+              <div className="luxPanelLead">{error ?? "未知错误"}</div>
+              <button type="button" className="luxBtn luxBtnInkSolid" onClick={() => go("#/")}>
+                返回首页
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return <Step3Page paipan={payload.paipan} kline={payload.kline} shareMode={true} go={go} />;
 }
 
 export default function App() {
+  const route = useHashRoute();
+  const [session, setSession] = useState<SessionState>(() => loadSession());
+
+  const modeItems = useMemo(() => {
+    const klineActive = route.name === "kline" || route.name === "confirm" || route.name === "result" || route.name === "share";
+    return [
+      { top: "势能图", sub: "人生K线", href: "#/kline", active: klineActive, disabled: false },
+      { top: "星盘", sub: "紫薇", href: "#", active: false, disabled: true },
+      { top: "抉择矩阵", sub: "塔罗", href: "#", active: false, disabled: true }
+    ];
+  }, [route.name]);
+
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <LayoutShell>
-            <Step1Page />
-          </LayoutShell>
-        }
-      />
-      <Route
-        path="/confirm"
-        element={
-          <LayoutShell>
-            <Step2Page />
-          </LayoutShell>
-        }
-      />
-      <Route
-        path="/result"
-        element={
-          <LayoutShell>
-            <Step3Page />
-          </LayoutShell>
-        }
-      />
-      <Route
-        path="/share/:id"
-        element={
-          <LayoutShell>
-            <SharePage />
-          </LayoutShell>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <LayoutShell>
-            <Step1Page />
-          </LayoutShell>
-        }
-      />
-    </Routes>
+    <div className="luxPage">
+      <header className="luxNav" aria-label="Site navigation">
+        <div className="luxContainer luxNavInner">
+          <a
+            className="luxBrand"
+            href="#/"
+            onClick={(e) => {
+              e.preventDefault();
+              go("#/");
+            }}
+          >
+            LIFE COORDINATES
+          </a>
+
+          <nav className="luxModeNav" aria-label="Modes">
+            {modeItems.map((it) => (
+              <a
+                key={it.top}
+                className={[
+                  "luxModeBtn",
+                  it.active ? "luxModeBtnActive" : "",
+                  it.disabled ? "luxModeBtnDisabled" : ""
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                href={it.href}
+                onClick={(e) => {
+                  if (it.disabled) {
+                    e.preventDefault();
+                    return;
+                  }
+                }}
+              >
+                <span className="luxModeBtnTop">{it.top}</span>
+                <span className="luxModeBtnSub">{it.sub}</span>
+              </a>
+            ))}
+          </nav>
+
+          <div className="luxNavActions" aria-label="Actions">
+            <button type="button" className="luxIconBtn" aria-label="Search">
+              <IconSearch />
+            </button>
+            <button type="button" className="luxIconBtn" aria-label="Account">
+              <IconUser />
+            </button>
+            <button type="button" className="luxIconBtn" aria-label="Cart">
+              <IconBag />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {route.name === "home" ? <HomePage go={go} /> : null}
+      {route.name === "kline" ? <Step1Page session={session} onSession={setSession} go={go} /> : null}
+      {route.name === "confirm" ? <Step2Page session={session} onSession={setSession} go={go} /> : null}
+      {route.name === "result" ? (
+        session.paipan && session.kline ? (
+          <Step3Page paipan={session.paipan} kline={session.kline} shareMode={false} go={go} />
+        ) : (
+          <main className="luxMain">
+            <section className="luxSection">
+              <div className="luxContainer">
+                <div className="luxPanel">
+                  <div className="luxPanelTitle">未找到结果数据</div>
+                  <div className="luxPanelLead">请先完成 Step 1 与 Step 2。</div>
+                  <button type="button" className="luxBtn luxBtnInkSolid" onClick={() => go("#/kline")}>
+                    返回输入
+                  </button>
+                </div>
+              </div>
+            </section>
+          </main>
+        )
+      ) : null}
+      {route.name === "share" ? <SharePage id={route.id} go={go} /> : null}
+
+      <footer className="luxFooter" aria-label="Footer">
+        <div className="luxContainer">
+          <div className="luxFooterTop">
+            <div>
+              <div className="luxFooterTitle">保持理性，保持清晰</div>
+              <div className="luxFooterLead">我们用可验证的排盘结果与结构化输出，让“人生走势”更直观、更可回看。</div>
+            </div>
+            <div className="luxSubscribe">
+              <a
+                className="luxBtn luxBtnInkSolid luxFooterSubscribeBtn"
+                href="#/kline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  go("#/kline");
+                }}
+              >
+                开始生成
+              </a>
+            </div>
+          </div>
+
+          <div className="luxFooterGrid">
+            <div className="luxFooterBrand">
+              <div className="luxFooterBrandName">LIFE COORDINATES</div>
+              <div className="luxFooterBrandNote">人生K线 · Life Destiny K-Line｜输入 → 排盘确认 → 结果展示｜可保存与分享</div>
+            </div>
+
+            <div className="luxFooterCol">
+              <div className="luxFooterColTitle">FLOW</div>
+              {["Step 1 输入", "Step 2 确认", "Step 3 结果", "只读分享"].map((t) => (
+                <a key={t} className="luxFooterLink" href="#" onClick={(e) => e.preventDefault()}>
+                  {t}
+                </a>
+              ))}
+            </div>
+
+            <div className="luxFooterCol">
+              <div className="luxFooterColTitle">MODEL</div>
+              {["真太阳时修正", "节气定月", "十年大运分段", "年度评分量化"].map((t) => (
+                <a key={t} className="luxFooterLink" href="#" onClick={(e) => e.preventDefault()}>
+                  {t}
+                </a>
+              ))}
+            </div>
+
+            <div className="luxFooterCol">
+              <div className="luxFooterColTitle">OUTPUT</div>
+              {["结构化排盘", "百年K线", "阶段洞察", "可导出分享"].map((t) => (
+                <a key={t} className="luxFooterLink" href="#" onClick={(e) => e.preventDefault()}>
+                  {t}
+                </a>
+              ))}
+            </div>
+
+            <div className="luxFooterCol">
+              <div className="luxFooterColTitle">NOTICE</div>
+              {["理性克制文案", "可验证排盘", "结果可保存", "分享只读"].map((t) => (
+                <a key={t} className="luxFooterLink" href="#" onClick={(e) => e.preventDefault()}>
+                  {t}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="luxFooterBottom">
+            <div className="luxFooterCopy">© {new Date().getFullYear()} Life Coordinates. All rights reserved.</div>
+            <div className="luxFooterSocial" aria-label="Social">
+              <a className="luxSocial" href="#" onClick={(e) => e.preventDefault()} aria-label="instagram">
+                <IconInstagram />
+              </a>
+              <a className="luxSocial" href="#" onClick={(e) => e.preventDefault()} aria-label="facebook">
+                <IconFacebook />
+              </a>
+              <a className="luxSocial" href="#" onClick={(e) => e.preventDefault()} aria-label="pinterest">
+                <IconPinterest />
+              </a>
+              <a className="luxSocial" href="#" onClick={(e) => e.preventDefault()} aria-label="youtube">
+                <IconYouTube />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
+

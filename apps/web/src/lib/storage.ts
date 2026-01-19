@@ -1,22 +1,26 @@
 import type { BirthInput, KLineResult, PaipanResult } from "@life-coordinates/core";
 
-const KEY = "lifeCoordinates:last";
+export type SessionState = {
+  input?: BirthInput;
+  paipan?: PaipanResult;
+  kline?: KLineResult;
+};
 
-export function saveSession(data: { input: BirthInput; paipan?: PaipanResult; kline?: KLineResult }) {
-  localStorage.setItem(KEY, JSON.stringify(data));
-}
+const SESSION_KEY = "life-coordinates.web.session.v1";
 
-export function loadSession(): { input: BirthInput; paipan?: PaipanResult; kline?: KLineResult } | null {
-  const raw = localStorage.getItem(KEY);
-  if (!raw) return null;
+export function loadSession(): SessionState {
   try {
-    return JSON.parse(raw);
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return {};
+    return parsed as SessionState;
   } catch {
-    return null;
+    return {};
   }
 }
 
-export function clearSession() {
-  localStorage.removeItem(KEY);
+export function saveSession(next: SessionState) {
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
 }
 
