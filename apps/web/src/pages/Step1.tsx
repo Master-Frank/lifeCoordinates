@@ -17,7 +17,6 @@ type GeoCandidate = {
   longitude?: number;
 };
 
-type GeoSuggestRes = { candidates: GeoCandidate[] };
 type GeoGeocodeRes = { candidate: GeoCandidate | null };
 type GeoRegionItem = { name: string; province?: string; city?: string; district?: string };
 type GeoRegionRes = { items: GeoRegionItem[] };
@@ -335,7 +334,6 @@ export default function Step1Page({
 
   const [addrTab, setAddrTab] = useState<"domestic" | "overseas">("domestic");
   const [addrQuery, setAddrQuery] = useState("");
-  const [addrBusy, setAddrBusy] = useState(false);
   const [addrCandidates, setAddrCandidates] = useState<GeoCandidate[]>([]);
   const [regionProvinces, setRegionProvinces] = useState<string[]>([]);
   const [regionCities, setRegionCities] = useState<string[]>([]);
@@ -361,7 +359,7 @@ export default function Step1Page({
         
         // 如果有区县数据
         if (Object.keys(districts).length > 0) {
-          for (const [districtCode, districtName] of Object.entries(districts)) {
+          for (const districtName of Object.values(districts)) {
             addressList.push({
               province: String(provinceName),
               city: String(cityName),

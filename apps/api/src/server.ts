@@ -61,8 +61,8 @@ function cacheSet(key: string, value: unknown) {
 
 type GeoCandidate = {
   displayName: string;
-  longitude: number;
-  latitude: number;
+  longitude?: number;
+  latitude?: number;
   name: string;
   province?: string;
   city?: string;

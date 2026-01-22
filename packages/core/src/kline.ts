@@ -153,12 +153,140 @@ function calcYearGanZhiBySolarYear(y: number): string {
   return `${gans[i % 10]}${zhis[i % 12]}`;
 }
 
+function buildTenGodSet(paipan: PaipanResult): Set<string> {
+  const list = [
+    paipan.fourPillars.year.ganTenGod,
+    paipan.fourPillars.month.ganTenGod,
+    paipan.fourPillars.day.ganTenGod,
+    paipan.fourPillars.hour.ganTenGod,
+    paipan.fourPillars.year.zhiTenGod,
+    paipan.fourPillars.month.zhiTenGod,
+    paipan.fourPillars.day.zhiTenGod,
+    paipan.fourPillars.hour.zhiTenGod,
+    ...paipan.fourPillars.year.hiddenStemTenGods,
+    ...paipan.fourPillars.month.hiddenStemTenGods,
+    ...paipan.fourPillars.day.hiddenStemTenGods,
+    ...paipan.fourPillars.hour.hiddenStemTenGods
+  ].filter(Boolean);
+  return new Set(list);
+}
+
+function seedFrom(ganZhi: string, score: number) {
+  const a = ganZhi.charCodeAt(0) || 0;
+  const b = ganZhi.charCodeAt(1) || 0;
+  return a + b + score;
+}
+
+function pickBySeed(list: string[], seed: number) {
+  if (!list.length) return "";
+  return list[seed % list.length];
+}
+
+function buildStageAdvice(
+  score: number,
+  tenGods: Set<string>,
+  strength: PaipanResult["overall"]["dayMasterStrength"],
+  favorable: Set<string>,
+  unfavorable: Set<string>,
+  ganZhi: string
+) {
+  const gan = ganZhi.slice(0, 1);
+  const zhi = ganZhi.slice(1);
+  const relation = relationScore({ favorable, unfavorable, gan, zhi });
+  const seed = seedFrom(ganZhi, score);
+  const baseStrong: Record<typeof relation.label, string[]> = {
+    favorable: ["趁势扩大优势", "抓住窗口加速推进", "把握节奏，顺势布局", "聚焦高胜率动作"],
+    neutral: ["稳中求进，兼顾质量", "保持节奏，稳步放大优势", "推进中做好节拍控制"],
+    unfavorable: ["优先稳盘，谨慎加码", "把控节奏，避免冒进", "先稳再进，减少消耗"]
+  };
+  const baseMid: Record<typeof relation.label, string[]> = {
+    favorable: ["稳健推进，借势提效", "循序推进，稳中提速", "稳步拉升，优先落地"],
+    neutral: ["稳定推进，重视复利", "节奏优先，稳扎稳打", "稳中有进，分段执行"],
+    unfavorable: ["控节奏，先稳现金流", "缩短链路，先保核心", "稳住基本盘，再做突破"]
+  };
+  const baseLow: Record<typeof relation.label, string[]> = {
+    favorable: ["先稳后攻，挑低风险突破", "缩节奏，重建秩序", "先修复再提速"],
+    neutral: ["控制风险，先守后攻", "集中资源，避免分散", "先稳定输出，再扩张"],
+    unfavorable: ["严格控风险，暂停冒进", "收缩战线，保住底线", "先守住关键，再谋反弹"]
+  };
+
+  const baseGroup = score >= 75 ? baseStrong : score >= 60 ? baseMid : baseLow;
+  const base = pickBySeed(baseGroup[relation.label], seed);
+
+  const extra: string[] = [];
+  const extraPool: string[] = [];
+  if (tenGods.has("七杀") || tenGods.has("正官")) extraPool.push(score >= 60 ? "强调纪律与执行" : "先稳住节奏再提效");
+  if (tenGods.has("伤官")) extraPool.push(score >= 60 ? "表达有章法" : "避免情绪化表达");
+  if (tenGods.has("偏财") || tenGods.has("正财")) extraPool.push("控制现金流与投入比例");
+  if (tenGods.has("正印") || tenGods.has("偏印")) extraPool.push("适合学习复盘，夯实方法论");
+  if (tenGods.has("比肩")) extraPool.push("协作要明确边界与责任");
+  if (tenGods.has("劫财")) extraPool.push("合作先定规则与分配");
+  if (strength === "弱") extraPool.push("先稳基础，减少消耗");
+  if (strength === "强" && score >= 75) extraPool.push("可适度加码推进");
+
+  if (extraPool.length) {
+    extra.push(pickBySeed(extraPool, seed + 2));
+    if (score < 75 && extraPool.length > 1) {
+      const second = pickBySeed(extraPool, seed + 5);
+      if (second && second !== extra[0]) extra.push(second);
+    }
+  }
+
+  return [base, ...extra].join("；");
+}
+
+function buildStageRisks(
+  score: number,
+  tenGods: Set<string>,
+  strength: PaipanResult["overall"]["dayMasterStrength"],
+  favorable: Set<string>,
+  unfavorable: Set<string>,
+  ganZhi: string
+) {
+  if (score >= 75) return [];
+  const gan = ganZhi.slice(0, 1);
+  const zhi = ganZhi.slice(1);
+  const relation = relationScore({ favorable, unfavorable, gan, zhi });
+  const seed = seedFrom(ganZhi, score + 7);
+  const baseMid: Record<typeof relation.label, string[]> = {
+    favorable: ["节奏过快", "目标分散"],
+    neutral: ["执行拖延", "节奏波动"],
+    unfavorable: ["回撤加大", "效率下滑"]
+  };
+  const baseLow: Record<typeof relation.label, string[]> = {
+    favorable: ["压力累积", "资源错配"],
+    neutral: ["情绪波动", "决策摇摆"],
+    unfavorable: ["策略失焦", "过度保守"]
+  };
+  const baseGroup = score >= 60 ? baseMid : baseLow;
+  const risks: string[] = [pickBySeed(baseGroup[relation.label], seed)];
+
+  const extraPool: string[] = [];
+  if (tenGods.has("七杀")) extraPool.push("压力过载");
+  if (tenGods.has("伤官")) extraPool.push("口舌是非");
+  if (tenGods.has("劫财")) extraPool.push("合伙摩擦");
+  if (tenGods.has("偏财")) extraPool.push("冲动投入");
+  if (tenGods.has("正财")) extraPool.push("机会错失");
+  if (tenGods.has("偏印") || tenGods.has("正印")) extraPool.push("思虑过多");
+  if (strength === "弱") extraPool.push("精力不足");
+  if (strength === "强" && score < 60) extraPool.push("冒进");
+
+  if (extraPool.length) {
+    risks.push(pickBySeed(extraPool, seed + 3));
+    if (score < 60 && extraPool.length > 1) risks.push(pickBySeed(extraPool, seed + 6));
+  }
+
+  return Array.from(new Set(risks)).slice(0, score >= 60 ? 2 : 3);
+}
+
 export function generateKLine(paipan: PaipanResult): KLineResult {
   const base = estimateBaseScore(paipan);
   const favorable = new Set(paipan.overall.favorableElements);
   const unfavorable = new Set(paipan.overall.unfavorableElements);
   const natalZhis = [paipan.fourPillars.year.zhi, paipan.fourPillars.month.zhi, paipan.fourPillars.day.zhi, paipan.fourPillars.hour.zhi].filter(Boolean);
   const patternScore = estimatePatternAdjust(paipan);
+  const tenGods = buildTenGodSet(paipan);
+  const strength = paipan.overall.dayMasterStrength;
 
   const years: YearKLine[] = [];
   let prevClose = clamp01(base);
@@ -237,8 +365,8 @@ export function generateKLine(paipan: PaipanResult): KLineResult {
       const avg = slice.length ? slice.reduce((s, x) => s + x.score, 0) / slice.length : 60;
       const score = clamp01(Math.round(avg));
       const summary = score >= 75 ? "偏强" : score >= 60 ? "平稳" : "偏弱";
-      const advice = score >= 75 ? "把握节奏，顺势布局" : score >= 60 ? "稳健推进，重视复利" : "控制风险，先守后攻";
-      const risks = score >= 60 ? [] : ["情绪波动", "决策保守"];
+      const advice = buildStageAdvice(score, tenGods, strength, favorable, unfavorable, d.ganZhi);
+      const risks = buildStageRisks(score, tenGods, strength, favorable, unfavorable, d.ganZhi);
       return { startAge: d.startAge, endAge: d.endAge, ganZhi: d.ganZhi, score, summary, advice, risks };
     });
 
@@ -275,4 +403,3 @@ export function generateKLine(paipan: PaipanResult): KLineResult {
     }
   };
 }
-

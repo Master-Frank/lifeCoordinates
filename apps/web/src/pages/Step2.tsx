@@ -2,7 +2,7 @@ import type { KLineResult, PaipanResult } from "@life-coordinates/core";
 import { useState } from "react";
 import PillarTable from "../components/PillarTable";
 import { postJson } from "../lib/api";
-import { calendarLabel, formatDateYmd, formatTimeLabel, genderLabel } from "../lib/format";
+import { formatDateYmd, formatTimeLabel, genderLabel } from "../lib/format";
 import type { SessionState } from "../lib/storage";
 import { saveSession } from "../lib/storage";
 
@@ -79,14 +79,16 @@ export default function Step2Page({ session, onSession, go }: { session: Session
           ) : null}
 
           <div className="luxConfirmStack">
-            <div className="luxConfirmHero" aria-label="Case header">
+            <div className="luxConfirmHero luxGradientA" aria-label="Case header">
               <div className="luxConfirmHeroTop">
                 <div>
                   <div className="luxConfirmHeroKicker">CASE PROFILE</div>
-                  <div className="luxConfirmHeroTitle">{input.name || "命主"}</div>
+                  <div className="luxConfirmHeroTitle">
+                    {input.name || "命主"}
+                    <span className="luxConfirmHeroGender"> 性别 {genderLabel(input.gender)}</span>
+                  </div>
                   <div className="luxConfirmHeroSub">基础八字排盘确认</div>
                 </div>
-                <div className="luxConfirmHeroBadge">{input.name ? `${input.name}｜案例` : "案例"}</div>
               </div>
               <div className="luxConfirmMetaGrid">
                 <div className="luxConfirmMetaItem">
@@ -97,101 +99,73 @@ export default function Step2Page({ session, onSession, go }: { session: Session
                 </div>
                 <div className="luxConfirmMetaItem">
                   <div className="luxConfirmMetaLabel">阳历</div>
-                  <div className="luxConfirmMetaValue">{paipan.solar.correctedYmdHms}</div>
+                  <div className="luxConfirmMetaValue">{paipan.solar.ymdHms}</div>
                 </div>
                 <div className="luxConfirmMetaItem">
-                  <div className="luxConfirmMetaLabel">性别</div>
-                  <div className="luxConfirmMetaValue">{genderLabel(input.gender)}</div>
+                  <div className="luxConfirmMetaLabel">出生地</div>
+                  <div className="luxConfirmMetaValue">
+                    {input.location.province} {input.location.city} (经度 {input.location.longitude})
+                  </div>
                 </div>
                 <div className="luxConfirmMetaItem">
-                  <div className="luxConfirmMetaLabel">历法</div>
-                  <div className="luxConfirmMetaValue">{calendarLabel(input.calendar)}</div>
+                  <div className="luxConfirmMetaLabel">真太阳时修正后时间</div>
+                  <div className="luxConfirmMetaValue">
+                    {paipan.solar.correctedYmdHms} (经度差 {paipan.solar.longitudeDeltaMinutes}分钟)
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="luxCardGrid">
-              <div className="luxCard luxCardBlock">
-                <div className="luxCardTitle">出生信息</div>
-                <div className="luxMetaList">
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">出生地</div>
-                    <div className="luxMetaVal">
-                      {input.location.province} {input.location.city}
-                    </div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">经度</div>
-                    <div className="luxMetaVal">{input.location.longitude}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="luxCard luxCardBlock">
-                <div className="luxCardTitle">真太阳时修正</div>
-                <div className="luxMetaList">
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">原时间</div>
-                    <div className="luxMetaVal">{paipan.solar.ymdHms}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">修正后</div>
-                    <div className="luxMetaVal">{paipan.solar.correctedYmdHms}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">经度差(分钟)</div>
-                    <div className="luxMetaVal">{paipan.solar.longitudeDeltaMinutes}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="luxCard luxCardBlock luxCardSpan">
-                <div className="luxCardTitle">四柱与扩展信息</div>
+              <div className="luxCard luxCardBlock luxCardSpan luxCardHero luxGradientB">
+                <div className="luxCardTitle">八字排盘信息</div>
                 <PillarTable paipan={paipan} />
               </div>
 
-              <div className="luxCard luxCardBlock luxCardSpan">
-                <div className="luxCardTitle">整体判断</div>
-                <div className="luxMetaList">
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">日主五行</div>
-                    <div className="luxMetaVal">{paipan.fourPillars.dayMaster.element}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">日主强弱</div>
-                    <div className="luxMetaVal">{paipan.overall.dayMasterStrength}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">喜用神(五行)</div>
-                    <div className="luxMetaVal">{paipan.overall.favorableElements.join("、")}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">忌神(五行)</div>
-                    <div className="luxMetaVal">{paipan.overall.unfavorableElements.join("、")}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">起运年龄</div>
-                    <div className="luxMetaVal">{paipan.overall.startLuckAge}</div>
-                  </div>
-                  <div className="luxMetaRow">
-                    <div className="luxMetaKey">顺逆</div>
-                    <div className="luxMetaVal">{paipan.overall.luckDirection}</div>
+              <div className="luxCardGrid luxCardGridSplit">
+                <div className="luxCard luxCardBlock luxCardHero luxGradientC">
+                  <div className="luxCardTitle">整体判断</div>
+                  <div className="luxMetaList">
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">日主五行</div>
+                      <div className="luxMetaVal">{paipan.fourPillars.dayMaster.element}</div>
+                    </div>
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">日主强弱</div>
+                      <div className="luxMetaVal">{paipan.overall.dayMasterStrength}</div>
+                    </div>
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">喜用神(五行)</div>
+                      <div className="luxMetaVal">{paipan.overall.favorableElements.join("、")}</div>
+                    </div>
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">忌神(五行)</div>
+                      <div className="luxMetaVal">{paipan.overall.unfavorableElements.join("、")}</div>
+                    </div>
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">起运年龄</div>
+                      <div className="luxMetaVal">{paipan.overall.startLuckAge}</div>
+                    </div>
+                    <div className="luxMetaRow">
+                      <div className="luxMetaKey">顺逆</div>
+                      <div className="luxMetaVal">{paipan.overall.luckDirection}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="luxCard luxCardBlock luxCardSpan">
-                <div className="luxCardTitle">操作</div>
-                <div className="luxActions luxActionsStack">
-                  <button type="button" className="luxBtn luxBtnInkOutline" onClick={() => go("#/kline")}
-                  >
-                    返回修改信息
-                  </button>
-                  <button type="button" className="luxBtn luxBtnInkSolid" onClick={onCompute} disabled={busy}>
-                    {busy ? "生成中..." : "确认无误，生成人生K线"}
-                  </button>
+                <div className="luxCard luxCardBlock luxCardHero luxGradientD">
+                  <div className="luxCardTitle">操作</div>
+                  <div className="luxActions luxActionsStack">
+                    <button type="button" className="luxBtn luxBtnInkOutline" onClick={() => go("#/kline")}
+                    >
+                      返回修改信息
+                    </button>
+                    <button type="button" className="luxBtn luxBtnInkSolid" onClick={onCompute} disabled={busy}>
+                      {busy ? "生成中..." : "确认无误，生成人生K线"}
+                    </button>
+                  </div>
+                  <div className="luxHint">提示：生成后可导出K线图片，并创建只读分享链接。</div>
                 </div>
-                <div className="luxHint">提示：生成后可导出K线图片，并创建只读分享链接。</div>
               </div>
             </div>
           </div>
