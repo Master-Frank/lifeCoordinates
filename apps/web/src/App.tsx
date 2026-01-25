@@ -12,6 +12,7 @@ type Route =
   | { name: "kline" }
   | { name: "confirm" }
   | { name: "result" }
+  | { name: "tarot" }
   | { name: "share"; id: string };
 
 function parseRoute(hash: string): Route {
@@ -20,6 +21,7 @@ function parseRoute(hash: string): Route {
   if (path === "/kline") return { name: "kline" };
   if (path === "/confirm") return { name: "confirm" };
   if (path === "/result") return { name: "result" };
+  if (path === "/tarot") return { name: "tarot" };
   if (path.startsWith("/share/")) {
     const id = path.replace("/share/", "").trim();
     if (id) return { name: "share", id };
@@ -314,6 +316,22 @@ function HomePage({ go }: { go: (path: string) => void }) {
   );
 }
 
+function TarotPage() {
+  const tarotSrc = import.meta.env.VITE_TAROT_URL ?? "/tarot/index.html";
+  return (
+    <main className="luxMain luxTarotMain">
+      <section className="luxTarotShell" aria-label="Tarot">
+        <iframe
+          className="luxTarotFrame"
+          title="抉择矩阵 · 塔罗"
+          src={tarotSrc}
+          allow="camera; microphone; fullscreen"
+        />
+      </section>
+    </main>
+  );
+}
+
 function SharePage({ id, go }: { id: string; go: (path: string) => void }) {
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -382,10 +400,11 @@ export default function App() {
 
   const modeItems = useMemo(() => {
     const klineActive = route.name === "kline" || route.name === "confirm" || route.name === "result" || route.name === "share";
+    const tarotActive = route.name === "tarot";
     return [
       { top: "势能图", sub: "人生K线", href: "#/kline", active: klineActive, disabled: false },
       { top: "星盘", sub: "紫薇", href: "#", active: false, disabled: true },
-      { top: "抉择矩阵", sub: "塔罗", href: "#", active: false, disabled: true }
+      { top: "抉择矩阵", sub: "塔罗", href: "#/tarot", active: tarotActive, disabled: false }
     ];
   }, [route.name]);
 
@@ -446,6 +465,7 @@ export default function App() {
       {route.name === "home" ? <HomePage go={go} /> : null}
       {route.name === "kline" ? <Step1Page session={session} onSession={setSession} go={go} /> : null}
       {route.name === "confirm" ? <Step2Page session={session} onSession={setSession} go={go} /> : null}
+      {route.name === "tarot" ? <TarotPage /> : null}
       {route.name === "result" ? (
         session.paipan && session.kline ? (
           <Step3Page paipan={session.paipan} kline={session.kline} shareMode={false} go={go} />
@@ -553,4 +573,3 @@ export default function App() {
     </div>
   );
 }
-

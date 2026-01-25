@@ -1,0 +1,7 @@
+{
+  "name": "Mystic Hand Tarot",
+  "description": "A 3D immersive Tarot reading experience controlled by hand gestures or mouse. Features particle effects, dynamic lighting, and the classic Rider-Waite deck.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

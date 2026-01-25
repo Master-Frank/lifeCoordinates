@@ -14,9 +14,9 @@
     "typescript-eslint": "^8.19.0"
   },
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build:tarot && npm run build --workspaces --if-present",
+    "build:tarot": "npm --prefix mystic-hand-tarot run build",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
   }
 }
-
