@@ -5,10 +5,10 @@ export enum InputMode {
 
 export enum GestureType {
   NONE = 'NONE',
-  OPEN = 'OPEN',   // Idle
-  POINT = 'POINT', // Hover
-  PINCH = 'PINCH', // Grab
-  FIST = 'FIST'    // Confirm
+  OPEN = 'OPEN',
+  POINT = 'POINT',
+  PINCH = 'PINCH',
+  FIST = 'FIST'
 }
 
 export interface TarotCardData {

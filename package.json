@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "npm run build:tarot && npm run build --workspaces --if-present",
-    "build:tarot": "npm --prefix mystic-hand-tarot run build",
+    "build:tarot": "npm --prefix apps/tarot run build",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
   }

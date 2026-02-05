@@ -11,8 +11,7 @@ interface AshParticlesProps {
 export const AshParticles: React.FC<AshParticlesProps> = ({ isActive, position, onComplete }) => {
   const pointsRef = useRef<THREE.Points>(null);
   const count = 1500;
-  
-  // Create buffers once
+
   const [positions, velocities, lifetimes] = React.useMemo(() => {
     const pos = new Float32Array(count * 3);
     const vel = new Float32Array(count * 3);
@@ -22,21 +21,19 @@ export const AshParticles: React.FC<AshParticlesProps> = ({ isActive, position, 
 
   const resetParticles = () => {
     if (!pointsRef.current) return;
-    
+
     for (let i = 0; i < count; i++) {
-      // Start at card position with slight width spread
       positions[i * 3] = position.x + (Math.random() - 0.5) * 1.2;
       positions[i * 3 + 1] = position.y + (Math.random() - 0.5) * 2.0;
       positions[i * 3 + 2] = position.z + (Math.random() - 0.5) * 0.1;
 
-      // Upward velocity with some noise
       velocities[i * 3] = (Math.random() - 0.5) * 0.05;
-      velocities[i * 3 + 1] = Math.random() * 0.1 + 0.02; // Up
+      velocities[i * 3 + 1] = Math.random() * 0.1 + 0.02;
       velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.05;
 
-      lifetimes[i] = Math.random() * 1.0 + 0.5; // Random lifetime
+      lifetimes[i] = Math.random() * 1.0 + 0.5;
     }
-    
+
     pointsRef.current.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
   };
@@ -45,7 +42,7 @@ export const AshParticles: React.FC<AshParticlesProps> = ({ isActive, position, 
     if (isActive) {
       resetParticles();
     }
-  }, [isActive, position]); // Reset when triggered
+  }, [isActive, position]);
 
   useFrame((state, delta) => {
     if (!isActive || !pointsRef.current) return;
@@ -56,29 +53,24 @@ export const AshParticles: React.FC<AshParticlesProps> = ({ isActive, position, 
     for (let i = 0; i < count; i++) {
       if (lifetimes[i] > 0) {
         lifetimes[i] -= delta;
-        
-        // Add curl/noise
+
         const time = state.clock.elapsedTime;
         const noiseX = Math.sin(time * 2 + i) * 0.002;
-        
+
         positions[i * 3] += velocities[i * 3] + noiseX;
         positions[i * 3 + 1] += velocities[i * 3 + 1];
         positions[i * 3 + 2] += velocities[i * 3 + 2];
-        
+
         activeParticles++;
       } else {
-        // Hide
-        positions[i * 3 + 1] = 1000; 
+        positions[i * 3 + 1] = 1000;
       }
     }
 
     positionsAttr.needsUpdate = true;
 
-    // Fade out material opacity globally or per vertex? 
-    // For simplicity, we just move them. 
-    // If all dead, call onComplete
     if (activeParticles === 0) {
-       onComplete();
+      onComplete();
     }
   });
 

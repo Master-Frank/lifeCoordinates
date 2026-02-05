@@ -3,7 +3,6 @@ import { TarotCardData } from './types';
 export const CARD_WIDTH = 1.2;
 export const CARD_HEIGHT = 2.0;
 
-// Major Arcana Data (Subset for demo to ensure it fits, but fully functional)
 export const MAJOR_ARCANA: TarotCardData[] = [
   {
     id: 'ar00',

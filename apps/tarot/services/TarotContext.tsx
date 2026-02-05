@@ -6,12 +6,12 @@ interface TarotContextType {
   deck: TarotCardData[];
   history: DrawResult[];
   currentCard: DrawResult | null;
-  viewingCard: DrawResult | null; // New state for history viewing
+  viewingCard: DrawResult | null;
   drawCard: () => DrawResult | null;
   confirmCard: () => void;
   resetDeck: () => void;
-  viewHistoryCard: (card: DrawResult) => void; // New method
-  clearViewingCard: () => void; // New method
+  viewHistoryCard: (card: DrawResult) => void;
+  clearViewingCard: () => void;
 }
 
 const TarotContext = createContext<TarotContextType | undefined>(undefined);
@@ -36,7 +36,7 @@ export const TarotProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
     setCurrentCard(result);
-    setViewingCard(null); // Ensure we aren't viewing history when drawing
+    setViewingCard(null);
     return result;
   };
 
@@ -57,7 +57,7 @@ export const TarotProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const viewHistoryCard = (card: DrawResult) => {
     setViewingCard(card);
-    setCurrentCard(null); // Clear active drawing if any to avoid conflict
+    setCurrentCard(null);
   };
 
   const clearViewingCard = () => {
@@ -65,13 +65,13 @@ export const TarotProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   return (
-    <TarotContext.Provider value={{ 
-      deck, 
-      history, 
-      currentCard, 
-      viewingCard, 
-      drawCard, 
-      confirmCard, 
+    <TarotContext.Provider value={{
+      deck,
+      history,
+      currentCard,
+      viewingCard,
+      drawCard,
+      confirmCard,
       resetDeck,
       viewHistoryCard,
       clearViewingCard
