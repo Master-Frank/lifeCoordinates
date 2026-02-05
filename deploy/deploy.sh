@@ -1,19 +1,39 @@
+
 #!/bin/bash
-set -e
 
-echo "🚀 Starting Deployment Script..."
+# 部署脚本 - 请在 Linux 服务器上执行
+# 使用方法: ./deploy.sh
 
-# 1. Pull latest code (if in git repo)
+set -e # 遇到错误立即停止
+
+PROJECT_DIR="/var/www/lifeCoordinates"
+echo "🚀 开始部署 Life Coordinates..."
+
+# 1. 进入项目目录
+if [ ! -d "$PROJECT_DIR" ]; then
+  echo "❌ 项目目录不存在: $PROJECT_DIR"
+  exit 1
+fi
+cd $PROJECT_DIR
+
+# 2. 拉取最新代码
+echo "📥 拉取 Git 代码..."
 # git pull origin main
 
-# 2. Build and Start Containers
-echo "📦 Building and Starting Containers..."
-docker-compose up -d --build
+# 3. 安装依赖
+echo "📦 安装依赖..."
+npm ci
 
-# 3. Clean up unused images
-echo "🧹 Cleaning up..."
-docker image prune -f
+# 4. 构建项目
+echo "🏗️ 构建全站应用..."
+npm run build
 
-echo "✅ Deployment Successful!"
-echo "🌍 Web: http://localhost"
-echo "🔌 API: http://localhost:3000"
+# 5. 重启后端服务 (PM2)
+echo "🔄 重启后端 API 服务..."
+pm2 reload deploy/ecosystem.config.cjs || pm2 start deploy/ecosystem.config.cjs
+
+# 6. 重载 Nginx 配置
+echo "web 重载 Nginx..."
+sudo nginx -t && sudo systemctl reload nginx
+
+echo "✅ 部署完成！"

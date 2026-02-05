@@ -68,7 +68,10 @@ function Sheet({
         <div className="luxSheetTop">
           <div className="luxSheetTitle">{title}</div>
           <button type="button" className="luxSheetClose" onClick={onClose} aria-label="close">
-            ×
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
         {children}
@@ -93,13 +96,15 @@ function WheelColumn({
   const isScrollingRef = useRef(false);
   const itemH = 40;
 
+  const lastWheelTimeRef = useRef<number>(0);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const idx = Math.max(0, options.indexOf(value));
     // 确保选中项在中间位置
     const centerOffset = (el.clientHeight - itemH) / 2;
-    const paddingTop = 90; // padding-top 值
+    const paddingTop = 86; // padding-top 值
     let targetScrollTop = idx * itemH - centerOffset + paddingTop;
     // 确保第一项和最后一项也能正确对齐
     const maxScrollTop = (options.length - 1) * itemH + paddingTop - centerOffset;
@@ -116,70 +121,78 @@ function WheelColumn({
     }
   }, [options, value]);
 
-  const onScroll = () => {
-    // 如果是程序化滚动，不处理
-    if (isScrollingRef.current) return;
-    
+  const onWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const el = ref.current;
+    if (!el || !options.length) return;
+
+    const now = Date.now();
+    // 节流：防止滚动过快
+    if (timerRef.current && now - (lastWheelTimeRef.current || 0) < 60) return;
+    lastWheelTimeRef.current = now;
+
+    // 清除之前的对齐定时器
     if (timerRef.current) window.clearTimeout(timerRef.current);
+    isScrollingRef.current = true;
+
+    const direction = Math.sign(e.deltaY);
+    const currentScrollTop = el.scrollTop;
+    const currentIndex = Math.round(currentScrollTop / itemH);
+    
+    let targetIndex = currentIndex + direction;
+    targetIndex = Math.max(0, Math.min(options.length - 1, targetIndex));
+
+    const targetScrollTop = targetIndex * itemH;
+
+    el.scrollTo({
+      top: targetScrollTop,
+      behavior: "smooth"
+    });
+
+    // 触发值更新
+    onValue(options[targetIndex]);
+
+    // 滚动结束后释放锁
     timerRef.current = window.setTimeout(() => {
-      const el = ref.current;
-      if (!el) return;
-      const centerOffset = (el.clientHeight - itemH) / 2;
-      const paddingTop = 90; // padding-top 值
-      const scrollTop = el.scrollTop - paddingTop; // 减去padding-top
-      const idx = clampInt(Math.round(scrollTop / itemH), 0, Math.max(0, options.length - 1));
-      const next = options[idx];
-      // 只在值改变时才更新，避免不必要的滚动
-      if (next !== value) {
-        onValue(next);
-      } else {
-        // 如果值没变，但位置不对，进行微调对齐
-        let targetScrollTop = idx * itemH - centerOffset + paddingTop;
-        // 确保第一项和最后一项也能正确对齐
-        const maxScrollTop = (options.length - 1) * itemH + paddingTop - centerOffset;
-        const minScrollTop = Math.max(0, paddingTop - centerOffset); // 确保不为负数
-        targetScrollTop = Math.max(minScrollTop, Math.min(maxScrollTop, targetScrollTop));
-        if (Math.abs(el.scrollTop - targetScrollTop) > 2) {
-          isScrollingRef.current = true;
-          el.scrollTop = targetScrollTop;
-          setTimeout(() => {
-            isScrollingRef.current = false;
-          }, 100);
-        }
+      isScrollingRef.current = false;
+      // 再次强制对齐，防止 smooth 滚动未完全到位
+      if (Math.abs(el.scrollTop - targetScrollTop) > 1) {
+        el.scrollTop = targetScrollTop;
       }
-    }, 90);
+    }, 250);
   };
 
   return (
     <div className="luxWheelCol">
       <div className="luxWheelHeader">{header}</div>
-      <div className="luxWheelScroller" ref={ref} onScroll={onScroll}>
-        {options.map((opt) => (
-          <button
-            type="button"
-            key={opt}
-            className={"luxWheelItem" + (opt === value ? " luxWheelItemOn" : "")}
-            onClick={() => {
-              const idx = options.indexOf(opt);
-              if (ref.current && idx >= 0) {
-                isScrollingRef.current = true;
-                const centerOffset = (ref.current.clientHeight - itemH) / 2;
-                const paddingTop = 90; // padding-top 值
-                let targetScrollTop = idx * itemH - centerOffset + paddingTop;
-                const maxScrollTop = (options.length - 1) * itemH + paddingTop - centerOffset;
-                const minScrollTop = Math.max(0, paddingTop - centerOffset);
-                targetScrollTop = Math.max(minScrollTop, Math.min(maxScrollTop, targetScrollTop));
-                ref.current.scrollTop = targetScrollTop;
-                setTimeout(() => {
-                  isScrollingRef.current = false;
-                }, 100);
-              }
-              onValue(opt);
-            }}
-          >
-            {opt}
-          </button>
-        ))}
+      <div className="luxWheelBody">
+        <div className="luxWheelScroller" ref={ref} onWheel={onWheel}>
+          {options.map((opt) => (
+            <button
+              type="button"
+              key={opt}
+              className={"luxWheelItem" + (opt === value ? " luxWheelItemOn" : "")}
+              onClick={() => {
+                const idx = options.indexOf(opt);
+                if (ref.current && idx >= 0) {
+                  isScrollingRef.current = true;
+                  if (timerRef.current) window.clearTimeout(timerRef.current);
+                  
+                  const targetScrollTop = idx * 40;
+                  ref.current.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+                  
+                  timerRef.current = window.setTimeout(() => {
+                    isScrollingRef.current = false;
+                  }, 250);
+                }
+                onValue(opt);
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -203,83 +216,93 @@ function RegionColumn({
   const isScrollingRef = useRef(false);
   const itemH = 40;
 
+  const lastWheelTimeRef = useRef<number>(0);
+
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (!options.length) return;
+    if (!el || !options.length) return;
+    
+    if (isScrollingRef.current) return;
+
     const idx = Math.max(0, options.indexOf(value));
-    // 确保选中项在中间位置
-    const centerOffset = (el.clientHeight - itemH) / 2;
-    const targetScrollTop = idx * itemH - centerOffset + 80; // 80是padding-top
-    // 只在位置需要调整时才滚动
+    const targetScrollTop = idx * itemH; 
+
     if (Math.abs(el.scrollTop - targetScrollTop) > 1) {
-      isScrollingRef.current = true;
       el.scrollTop = targetScrollTop;
-      // 重置标志
-      setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 100);
     }
   }, [options, value]);
 
-  const onScroll = () => {
-    // 如果是程序化滚动，不处理
-    if (isScrollingRef.current) return;
-    
+  const onWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const el = ref.current;
+    if (!el || !options.length) return;
+
+    const now = Date.now();
+    if (timerRef.current && now - (lastWheelTimeRef.current || 0) < 60) return;
+    lastWheelTimeRef.current = now;
+
     if (timerRef.current) window.clearTimeout(timerRef.current);
+    isScrollingRef.current = true;
+
+    const direction = Math.sign(e.deltaY);
+    const currentScrollTop = el.scrollTop;
+    const currentIndex = Math.round(currentScrollTop / itemH);
+    
+    let targetIndex = currentIndex + direction;
+    targetIndex = Math.max(0, Math.min(options.length - 1, targetIndex));
+
+    const targetScrollTop = targetIndex * itemH;
+
+    el.scrollTo({
+      top: targetScrollTop,
+      behavior: "smooth"
+    });
+
+    onValue(options[targetIndex]);
+
     timerRef.current = window.setTimeout(() => {
-      const el = ref.current;
-      if (!el || !options.length) return;
-      const centerOffset = (el.clientHeight - itemH) / 2;
-      const scrollTop = el.scrollTop - 80; // 减去padding-top
-      const idx = clampInt(Math.round(scrollTop / itemH), 0, Math.max(0, options.length - 1));
-      const next = options[idx];
-      // 只在值改变时才更新，避免不必要的滚动
-      if (next && next !== value) {
-        onValue(next);
-      } else if (next) {
-        // 如果值没变，但位置不对，进行微调对齐
-        const targetScrollTop = idx * itemH - centerOffset + 80;
-        if (Math.abs(el.scrollTop - targetScrollTop) > 2) {
-          isScrollingRef.current = true;
-          el.scrollTop = targetScrollTop;
-          setTimeout(() => {
-            isScrollingRef.current = false;
-          }, 100);
-        }
+      isScrollingRef.current = false;
+      if (Math.abs(el.scrollTop - targetScrollTop) > 1) {
+        el.scrollTop = targetScrollTop;
       }
-    }, 90);
+    }, 250);
   };
 
   return (
     <div className="luxPickerCol">
       <div className="luxPickerHead">{header}</div>
-      <div className="luxPickerList" ref={ref} onScroll={onScroll}>
-        {options.length ? (
-          options.map((opt) => (
-            <button
-              type="button"
-              key={opt}
-              className={"luxPickerItem" + (opt === value ? " luxPickerItemOn" : "")}
-              onClick={() => {
-                const idx = options.indexOf(opt);
-                if (ref.current && idx >= 0) {
-                  isScrollingRef.current = true;
-                  const centerOffset = (ref.current.clientHeight - itemH) / 2;
-                  ref.current.scrollTop = idx * itemH - centerOffset + 80;
-                  setTimeout(() => {
-                    isScrollingRef.current = false;
-                  }, 100);
-                }
-                onValue(opt);
-              }}
-            >
-              {opt}
-            </button>
-          ))
-        ) : (
-          <div className="luxPickerEmpty">{emptyText ?? "暂无"}</div>
-        )}
+      <div className="luxPickerBody">
+        <div className="luxPickerList" ref={ref} onWheel={onWheel}>
+          {options.length ? (
+            options.map((opt) => (
+              <button
+                type="button"
+                key={opt}
+                className={"luxPickerItem" + (opt === value ? " luxPickerItemOn" : "")}
+                onClick={() => {
+                  const idx = options.indexOf(opt);
+                  if (ref.current && idx >= 0) {
+                    isScrollingRef.current = true;
+                    if (timerRef.current) window.clearTimeout(timerRef.current);
+                    
+                    const targetScrollTop = idx * itemH;
+                    ref.current.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+                    
+                    timerRef.current = window.setTimeout(() => {
+                      isScrollingRef.current = false;
+                    }, 250);
+                  }
+                  onValue(opt);
+                }}
+              >
+                {opt}
+              </button>
+            ))
+          ) : (
+            <div className="luxPickerEmpty">{emptyText ?? "暂无"}</div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -944,28 +967,36 @@ export default function Step1Page({
         </div>
 
         <div className="luxSheetRow">
-          <input 
-            className="luxText luxSearchInput" 
-            value={addrQuery} 
-            onFocus={() => {
-              // 点击输入框时，切换到搜索模式
-              setAddrSearchMode(true);
-            }}
-            onChange={(e) => {
-              const value = e.target.value;
-              setAddrQuery(value);
-              // 切换到搜索模式
-              setAddrSearchMode(true);
-              // 用户输入时，如果输入框被清空，也清空选择
-              if (!value.trim()) {
-                setTmpProvince("");
-                setTmpCity("");
-                setTmpDistrict("");
-                setAddrCandidates([]);
-              }
-            }} 
-            placeholder="搜索全国城市及地区" 
-          />
+          <div className="luxSearchWrapper">
+            <div className="luxSearchIcon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input 
+              className="luxText luxSearchInput" 
+              value={addrQuery} 
+              onFocus={() => {
+                // 点击输入框时，切换到搜索模式
+                setAddrSearchMode(true);
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+                setAddrQuery(value);
+                // 切换到搜索模式
+                setAddrSearchMode(true);
+                // 用户输入时，如果输入框被清空，也清空选择
+                if (!value.trim()) {
+                  setTmpProvince("");
+                  setTmpCity("");
+                  setTmpDistrict("");
+                  setAddrCandidates([]);
+                }
+              }} 
+              placeholder="搜索全国城市及地区" 
+            />
+          </div>
         </div>
 
         {/* 搜索模式：显示搜索结果列表 */}

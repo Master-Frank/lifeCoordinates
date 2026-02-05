@@ -224,10 +224,10 @@ button {
 
 .luxHero {
   position: relative;
-  min-height: 620px;
+  min-height: 680px;
   display: flex;
   align-items: center;
-  padding: 70px 0 56px;
+  padding: 80px 0 64px;
   overflow: hidden;
 }
 
@@ -237,10 +237,10 @@ button {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(250, 250, 249, 0.96) 0%,
-    rgba(250, 250, 249, 0.92) 36%,
-    rgba(250, 250, 249, 0.55) 60%,
-    rgba(250, 250, 249, 0.12) 78%,
+    rgba(250, 250, 249, 0.98) 0%,
+    rgba(250, 250, 249, 0.94) 36%,
+    rgba(250, 250, 249, 0.6) 60%,
+    rgba(250, 250, 249, 0.2) 78%,
     rgba(250, 250, 249, 0) 92%
   );
   z-index: 1;
@@ -298,10 +298,11 @@ button {
 
 .luxHeroTitle {
   font-family: "Playfair Display", serif;
-  margin: 20px 0 16px;
-  font-size: clamp(46px, 5.3vw, 68px);
-  line-height: 0.92;
+  margin: 24px 0 18px;
+  font-size: clamp(48px, 5.5vw, 72px);
+  line-height: 0.95;
   letter-spacing: -0.04em;
+  color: #1C1917;
 }
 
 .luxHeroTitleLine {
@@ -357,16 +358,49 @@ button {
 }
 
 .luxBtnInkSolid {
-  background: rgba(12, 10, 9, 0.98);
-  color: rgba(255, 255, 255, 0.96);
-  border-color: rgba(12, 10, 9, 0.98);
-  box-shadow: 0 18px 46px rgba(12, 10, 9, 0.16);
-  padding: 12px 20px;
+  background: linear-gradient(145deg, #2a2a2a, #000000);
+  color: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 14px 32px;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.luxBtnInkSolid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.08), transparent);
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
 
 .luxBtnInkSolid:hover {
-  transform: translateY(-1px);
-  background: rgba(12, 10, 9, 0.92);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.3), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(202, 138, 4, 0.5);
+  border-color: rgba(202, 138, 4, 0.6);
+  background: linear-gradient(145deg, #333, #050505);
+}
+
+.luxBtnInkSolid:hover::after {
+  opacity: 1;
 }
 
 .luxBtnInkOutline {
@@ -864,16 +898,18 @@ button {
 }
 
 .luxPanel {
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(255, 255, 255, 0.86);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 20px;
+  border: 1px solid rgba(214, 211, 209, 0.6);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px -12px rgba(12, 10, 9, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  padding: 24px;
 }
 
 .luxPanelWide {
-  padding: 24px;
-  margin-top: 32px;
+  padding: 32px;
+  margin-top: 40px;
 }
 
 .luxHeroContentWide {
@@ -882,15 +918,20 @@ button {
 
 .luxPanelTitle {
   font-family: "Playfair Display", serif;
-  font-size: 22px;
-  margin-bottom: 4px;
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #1C1917;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .luxPanelLead {
-  margin-top: 10px;
-  margin-bottom: 4px;
-  color: rgba(68, 64, 60, 0.85);
-  line-height: 1.5;
+  margin-top: 12px;
+  margin-bottom: 24px;
+  color: #57534E;
+  line-height: 1.65;
+  font-size: 16px;
+  max-width: 60ch;
 }
 
 .luxAlert {
@@ -905,8 +946,12 @@ button {
 .luxBtnBlock {
   width: 100%;
   justify-content: center;
-  display: inline-flex;
-  margin-top: 24px;
+  display: flex;
+  margin-top: 32px;
+  height: 60px;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  /* Removed background override to use luxBtnInkSolid style */
 }
 
 .luxForm {
@@ -934,29 +979,41 @@ button {
 
 .luxFormLabel {
   font-size: 13px;
-  letter-spacing: 0.08em;
-  color: rgba(12, 10, 9, 0.86);
+  letter-spacing: 0.05em;
+  color: #57534E;
   min-width: 92px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
 }
 
 .luxFormInput {
   width: 100%;
   max-width: 420px;
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 12px;
-  padding: 10px 12px;
+  height: 48px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
   outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
 }
 
 .luxFormInput:focus {
-  border-color: rgba(202, 138, 4, 0.55);
-  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
 }
 
 .luxFormInline {
   display: inline-flex;
-  gap: 8px;
+  gap: 4px;
+  background: rgba(231, 229, 228, 0.5);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.6);
 }
 
 .luxPickRow {
@@ -964,8 +1021,8 @@ button {
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px 0;
+  gap: 16px;
+  padding: 18px 0;
   border-top: 1px solid rgba(214, 211, 209, 0.55);
   background: transparent;
   border-left: 0;
@@ -973,11 +1030,21 @@ button {
   border-bottom: 0;
   outline: none;
   cursor: pointer;
-  transition: background 180ms ease;
+  transition: all 200ms ease;
+  border-radius: 12px;
 }
 
 .luxPickRow:hover {
-  background: rgba(250, 250, 249, 0.55);
+  background: rgba(255, 255, 255, 0.6);
+  padding-left: 12px;
+  padding-right: 12px;
+  margin: 0 -12px;
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.03);
+}
+
+.luxPickRow:active {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(0.99);
 }
 
 .luxPickRow:focus-visible {
@@ -988,9 +1055,12 @@ button {
 
 .luxPickLabel {
   font-size: 13px;
-  letter-spacing: 0.08em;
-  color: rgba(12, 10, 9, 0.86);
+  letter-spacing: 0.05em;
+  color: #57534E;
   min-width: 92px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
 }
 
 .luxPickValue {
@@ -998,20 +1068,22 @@ button {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .luxPickPrimary {
-  color: rgba(12, 10, 9, 0.92);
+  color: #1C1917;
   font-weight: 500;
+  font-size: 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Playfair Display", serif;
 }
 
 .luxPickSecondary {
-  font-size: 12px;
-  color: rgba(68, 64, 60, 0.78);
+  font-size: 13px;
+  color: #78716C;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1053,24 +1125,43 @@ button {
 
 .luxText {
   width: 100%;
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
   outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
 }
 
 .luxText:focus {
-  border-color: rgba(202, 138, 4, 0.55);
-  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
 }
 
 .luxSelect {
   width: 100%;
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
+  outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2357534E'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+.luxSelect:focus {
+  background-color: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
 }
 
 .luxRow {
@@ -1086,9 +1177,50 @@ button {
 .luxCheck {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: rgba(68, 64, 60, 0.86);
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(68, 64, 60, 0.9);
+  cursor: pointer;
+  user-select: none;
+}
+
+.luxCheck input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214, 211, 209, 0.9);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  position: relative;
+  transition: all 200ms ease;
+}
+
+.luxCheck input:checked {
+  background: #ca8a04;
+  border-color: #ca8a04;
+}
+
+.luxCheck input:checked::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.luxCheck input:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.4);
+  outline-offset: 2px;
+}
+
+.luxCheck:hover input {
+  border-color: rgba(202, 138, 4, 0.6);
 }
 
 .luxCheckInline {
@@ -1099,26 +1231,44 @@ button {
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(12, 10, 9, 0.42);
+  background: rgba(12, 10, 9, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 14px;
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .luxSheet {
-  width: min(560px, 100%);
-  border: 1px solid rgba(214, 211, 209, 0.9);
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 22px;
-  box-shadow: 0 22px 70px rgba(12, 10, 9, 0.22);
-  padding: 14px;
+  width: min(520px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  box-shadow: 
+    0 20px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  padding: 24px;
   max-height: calc(100vh - 28px);
   min-height: 400px;
   height: auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .luxSheetTop {
@@ -1126,99 +1276,163 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 8px;
 }
 
 .luxSheetTitle {
   font-family: "Playfair Display", serif;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 600;
   letter-spacing: -0.01em;
+  color: rgba(12, 10, 9, 0.95);
 }
 
 .luxSheetClose {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(250, 250, 249, 0.85);
+  border: 1px solid rgba(12, 10, 9, 0.08);
+  background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
+  color: rgba(12, 10, 9, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  padding-bottom: 2px;
+  transition: all 200ms ease;
+}
+
+.luxSheetClose:hover {
+  background: rgba(12, 10, 9, 0.05);
+  color: rgba(12, 10, 9, 0.9);
+  transform: rotate(90deg);
 }
 
 .luxSheetTabs {
   display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 12px;
+  background: rgba(12, 10, 9, 0.04);
+  padding: 4px;
+  border-radius: 999px;
+  margin-top: 16px;
+  align-self: center;
 }
 
 .luxSheetTabsSlim {
-  margin-top: 10px;
+  margin-top: 12px;
+  padding: 3px;
 }
 
 .luxSheetTab {
-  border: 1px solid rgba(214, 211, 209, 0.85);
+  border: 0;
   background: transparent;
   border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  color: rgba(12, 10, 9, 0.86);
+  color: rgba(12, 10, 9, 0.6);
+  transition: all 200ms ease;
+  min-width: 80px;
 }
 
 .luxSheetTab:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .luxSheetTabOn {
-  background: rgba(12, 10, 9, 0.95);
-  color: rgba(255, 255, 255, 0.96);
-  border-color: rgba(12, 10, 9, 0.95);
+  background: #fff;
+  color: rgba(12, 10, 9, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .luxSheetRow {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .luxSheetActions {
   display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 12px;
+  justify-content: flex-end;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(12, 10, 9, 0.06);
 }
 
 .luxWheelGrid {
-  margin-top: 12px;
+  margin-top: 24px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding: 4px;
+  mask-image: linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent);
 }
 
 .luxWheelCol {
   flex: 1;
-  min-width: 92px;
+  min-width: 80px;
+  position: relative;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  height: 248px;
+  display: flex;
+  flex-direction: column;
+}
+
+.luxWheelBody {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.luxWheelBody::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: rgba(202, 138, 4, 0.08);
+  border: 1px solid rgba(202, 138, 4, 0.15);
+  pointer-events: none;
 }
 
 .luxWheelHeader {
   text-align: center;
   font-size: 11px;
-  letter-spacing: 0.16em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(68, 64, 60, 0.78);
-  margin-bottom: 6px;
+  color: rgba(12, 10, 9, 0.5);
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .luxWheelScroller {
-  height: 220px;
-  overflow: auto;
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.98);
-  padding: 90px 0;
-  scroll-snap-type: y mandatory;
+  position: absolute;
+  inset: 0;
+  overflow: hidden; /* 禁用原生滚动条，完全由 JS 接管 */
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 86px 0; /* (212px height / 2) - 20px item half */
+  overscroll-behavior: contain;
+}
+
+.luxWheelScroller::-webkit-scrollbar {
+  display: none;
 }
 
 .luxWheelItem {
@@ -1231,18 +1445,58 @@ button {
   justify-content: center;
   cursor: pointer;
   scroll-snap-align: center;
-  color: rgba(12, 10, 9, 0.86);
-  font-size: 16px;
+  color: rgba(12, 10, 9, 0.4);
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 150ms ease;
+  opacity: 0.6;
+}
+
+.luxWheelItem:hover {
+  color: rgba(12, 10, 9, 0.8);
+  opacity: 1;
 }
 
 .luxWheelItemOn {
-  color: rgba(12, 10, 9, 0.96);
-  background: rgba(202, 138, 4, 0.1);
+  color: rgba(12, 10, 9, 0.95);
   font-weight: 600;
+  font-size: 17px;
+  opacity: 1;
+  background: transparent;
+}
+
+.luxSearchWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.luxSearchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(68, 64, 60, 0.5);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .luxSearchInput {
-  margin-top: 8px;
+  margin-top: 0;
+  padding-left: 36px;
+  height: 42px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 200ms ease;
+}
+
+.luxSearchInput:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(202, 138, 4, 0.5);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.1);
 }
 
 .luxSearchStatus {
@@ -1259,33 +1513,41 @@ button {
   overflow-y: auto;
   overflow-x: hidden;
   border: 1px solid rgba(214, 211, 209, 0.85);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.98);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
   flex-shrink: 0;
+  padding: 4px;
 }
 
 .luxSearchResultItem {
   width: 100%;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 0;
-  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  border-radius: 8px;
+  margin-bottom: 2px;
   background: transparent;
   text-align: left;
   cursor: pointer;
-  transition: background 150ms ease;
-  display: block;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .luxSearchResultItem:last-child {
+  margin-bottom: 0;
   border-bottom: 0;
 }
 
 .luxSearchResultItem:hover {
-  background: rgba(250, 250, 249, 0.8);
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .luxSearchResultItem:active {
   background: rgba(202, 138, 4, 0.1);
+  transform: translateX(0);
 }
 
 .luxSearchResultText {
@@ -1316,12 +1578,33 @@ button {
 .luxPickerCol {
   border: 1px solid rgba(214, 211, 209, 0.85);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.6);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 248px;
   flex-shrink: 0;
+  position: relative;
+}
+
+.luxPickerBody {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.luxPickerBody::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: rgba(202, 138, 4, 0.08);
+  border: 1px solid rgba(202, 138, 4, 0.15);
+  pointer-events: none;
 }
 
 .luxPickerHead {
@@ -1331,15 +1614,22 @@ button {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(68, 64, 60, 0.78);
-  border-bottom: 1px solid rgba(214, 211, 209, 0.75);
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 2;
+  flex-shrink: 0;
 }
 
 .luxPickerList {
-  height: 200px;
-  overflow: auto;
-  padding: 80px 0;
-  scroll-snap-type: y mandatory;
-  scroll-padding: 80px 0;
+  position: absolute;
+  inset: 0;
+  overflow: hidden; /* 禁用原生滚动条 */
+  padding: 86px 0; /* (212px height / 2) - 20px item half */
+  overscroll-behavior: contain;
+}
+
+.luxPickerList::-webkit-scrollbar {
+  display: none;
 }
 
 .luxPickerItem {
@@ -1348,17 +1638,20 @@ button {
   border: 0;
   background: transparent;
   padding: 0 12px;
-  text-align: left;
+  text-align: center;
+  justify-content: center;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: rgba(12, 10, 9, 0.9);
+  color: rgba(12, 10, 9, 0.6);
   scroll-snap-align: center;
+  transition: all 150ms ease;
 }
 
 .luxPickerItemOn {
-  background: rgba(202, 138, 4, 0.12);
+  color: rgba(12, 10, 9, 0.95);
   font-weight: 600;
+  transform: scale(1.05);
 }
 
 .luxPickerEmpty {
@@ -1369,22 +1662,31 @@ button {
 
 .luxToggle {
   display: inline-flex;
-  gap: 8px;
+  gap: 4px;
+  background: rgba(231, 229, 228, 0.5);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.6);
 }
 
 .luxToggleBtn {
-  border: 1px solid rgba(214, 211, 209, 0.85);
-  background: rgba(255, 255, 255, 0.9);
-  color: rgba(12, 10, 9, 0.86);
+  border: 0;
+  background: transparent;
+  color: #57534E;
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 8px 24px;
   cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-width: 72px;
 }
 
 .luxToggleBtnOn {
-  background: rgba(12, 10, 9, 0.95);
-  color: rgba(255, 255, 255, 0.96);
-  border-color: rgba(12, 10, 9, 0.95);
+  background: #fff;
+  color: #1C1917;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
 }
 
 .luxHint {
@@ -2071,26 +2373,27 @@ button {
 }
 
 .luxFooter {
-  padding: 86px 0 34px;
-  border-top: 1px solid rgba(214, 211, 209, 0.85);
-  background: var(--bg);
+  padding: 100px 0 48px;
+  border-top: 1px solid rgba(214, 211, 209, 0.6);
+  background: #FAFAF9;
 }
 
 .luxFooterTop {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 24px;
   align-items: center;
   justify-items: center;
   text-align: center;
-  padding-bottom: 42px;
-  border-bottom: 1px solid rgba(214, 211, 209, 0.75);
+  padding-bottom: 56px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.6);
 }
 
 .luxFooterTitle {
   font-family: "Playfair Display", serif;
-  font-size: 30px;
+  font-size: 36px;
   letter-spacing: -0.02em;
+  color: #1C1917;
 }
 
 .luxFooterLead {
@@ -2111,75 +2414,82 @@ button {
   min-width: 0;
   height: 48px;
   border-radius: 12px 0 0 12px;
-  border: 1px solid rgba(214, 211, 209, 0.9);
+  border: 1px solid rgba(214, 211, 209, 0.7);
   border-right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 16px;
   outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
 }
 
 .luxInput:focus {
-  border-color: rgba(202, 138, 4, 0.55);
-  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
+  z-index: 2;
 }
 
 .luxFooterSubscribeBtn {
-  height: 48px;
-  border-radius: 0 999px 999px 0;
-  padding: 12px 28px;
-}
-
-.luxFooterSubscribeBtn:hover {
-  transform: none;
+  border-radius: 999px;
+  padding-left: 42px;
+  padding-right: 42px;
+  /* Use styles from luxBtnInkSolid */
 }
 
 .luxFooterGrid {
-  padding-top: 64px;
+  padding-top: 72px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
-  margin-bottom: 64px;
+  gap: 40px;
+  margin-bottom: 72px;
   align-items: start;
 }
 
 .luxFooterBrandName {
   font-family: "Playfair Display", serif;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1C1917;
 }
 
 .luxFooterBrandNote {
-  margin-top: 10px;
+  margin-top: 14px;
   font-size: 14px;
-  line-height: 20px;
-  color: rgba(107, 107, 107, 1);
+  line-height: 1.6;
+  color: #57534E;
+  max-width: 280px;
 }
 
 .luxFooterColTitle {
-  font-family: "Playfair Display", serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 1.2px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, 1);
+  color: #1C1917;
+  margin-bottom: 6px;
 }
 
 .luxFooterCol {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .luxFooterLink {
   text-decoration: none;
-  color: rgba(107, 107, 107, 1);
+  color: #57534E;
   font-size: 14px;
-  line-height: 20px;
-  transition: color 180ms ease;
+  line-height: 1.5;
+  transition: all 180ms ease;
+  display: inline-block;
 }
 
 .luxFooterLink:hover {
-  color: rgba(26, 26, 26, 1);
+  color: #CA8A04;
+  transform: translateX(2px);
 }
 
 .luxFooterBottom {

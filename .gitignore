@@ -15,3 +15,5 @@ Thumbs.db
 .env.*
 
 .trae/rules/
+.trae/skills/
+openspec/
