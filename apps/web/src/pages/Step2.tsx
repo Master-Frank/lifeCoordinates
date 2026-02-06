@@ -42,7 +42,7 @@ export default function Step2Page({ session, onSession, go }: { session: Session
     setError(null);
     try {
       const res = await postJson<{ paipan: PaipanResult; kline: KLineResult }>("/api/compute", input);
-      const next: SessionState = { input, paipan: res.paipan, kline: res.kline };
+      const next: SessionState = { ...session, input, paipan: res.paipan, kline: res.kline };
       saveSession(next);
       onSession(next);
       go("#/result");

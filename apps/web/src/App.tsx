@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Step1Page from "./pages/Step1";
 import Step2Page from "./pages/Step2";
 import Step3Page from "./pages/Step3";
+import ZiweiStep2Page from "./pages/ZiweiStep2";
 import { readJson } from "./lib/api";
 import { loadSession } from "./lib/storage";
 import type { SessionState } from "./lib/storage";
@@ -12,6 +13,8 @@ type Route =
   | { name: "kline" }
   | { name: "confirm" }
   | { name: "result" }
+  | { name: "ziwei" }
+  | { name: "ziweiConfirm" }
   | { name: "tarot" }
   | { name: "share"; id: string };
 
@@ -21,6 +24,8 @@ function parseRoute(hash: string): Route {
   if (path === "/kline") return { name: "kline" };
   if (path === "/confirm") return { name: "confirm" };
   if (path === "/result") return { name: "result" };
+  if (path === "/ziwei") return { name: "ziwei" };
+  if (path === "/ziwei/confirm") return { name: "ziweiConfirm" };
   if (path === "/tarot") return { name: "tarot" };
   if (path.startsWith("/share/")) {
     const id = path.replace("/share/", "").trim();
@@ -400,10 +405,11 @@ export default function App() {
 
   const modeItems = useMemo(() => {
     const klineActive = route.name === "kline" || route.name === "confirm" || route.name === "result" || route.name === "share";
+    const ziweiActive = route.name === "ziwei" || route.name === "ziweiConfirm";
     const tarotActive = route.name === "tarot";
     return [
       { top: "势能图", sub: "人生K线", href: "#/kline", active: klineActive, disabled: false },
-      { top: "星盘", sub: "紫薇", href: "#", active: false, disabled: true },
+      { top: "星盘", sub: "紫薇", href: "#/ziwei", active: ziweiActive, disabled: false },
       { top: "抉择矩阵", sub: "塔罗", href: "#/tarot", active: tarotActive, disabled: false }
     ];
   }, [route.name]);
@@ -465,6 +471,8 @@ export default function App() {
       {route.name === "home" ? <HomePage go={go} /> : null}
       {route.name === "kline" ? <Step1Page session={session} onSession={setSession} go={go} /> : null}
       {route.name === "confirm" ? <Step2Page session={session} onSession={setSession} go={go} /> : null}
+      {route.name === "ziwei" ? <Step1Page mode="ziwei" session={session} onSession={setSession} go={go} /> : null}
+      {route.name === "ziweiConfirm" ? <ZiweiStep2Page session={session} go={go} /> : null}
       {route.name === "tarot" ? <TarotPage /> : null}
       {route.name === "result" ? (
         session.paipan && session.kline ? (

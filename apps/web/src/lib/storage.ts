@@ -2,6 +2,7 @@ import type { BirthInput, KLineResult, PaipanResult } from "@life-coordinates/co
 
 export type SessionState = {
   input?: BirthInput;
+  ziweiInput?: BirthInput;
   paipan?: PaipanResult;
   kline?: KLineResult;
 };
@@ -23,4 +24,3 @@ export function loadSession(): SessionState {
 export function saveSession(next: SessionState) {
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
 }
-

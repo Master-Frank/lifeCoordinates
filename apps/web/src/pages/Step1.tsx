@@ -311,13 +311,15 @@ function RegionColumn({
 export default function Step1Page({
   session,
   onSession,
-  go
+  go,
+  mode = "kline"
 }: {
   session: SessionState;
   onSession: (next: SessionState) => void;
   go: (path: string) => void;
+  mode?: "kline" | "ziwei";
 }) {
-  const initial = session.input;
+  const initial = mode === "ziwei" ? session.ziweiInput : session.input;
   const [name, setName] = useState(initial?.name ?? "");
   const [gender, setGender] = useState<BirthInput["gender"]>(initial?.gender ?? "male");
 
@@ -814,11 +816,18 @@ export default function Step1Page({
 
     setBusy(true);
     try {
-      const res = await postJson<{ paipan: PaipanResult }>("/api/paipan", parsed.data);
-      const next: SessionState = { input: parsed.data, paipan: res.paipan };
-      saveSession(next);
-      onSession(next);
-      go("#/confirm");
+      if (mode === "kline") {
+        const res = await postJson<{ paipan: PaipanResult }>("/api/paipan", parsed.data);
+        const next: SessionState = { ...session, input: parsed.data, paipan: res.paipan };
+        saveSession(next);
+        onSession(next);
+        go("#/confirm");
+      } else {
+        const next: SessionState = { ...session, ziweiInput: parsed.data };
+        saveSession(next);
+        onSession(next);
+        go("#/ziwei/confirm");
+      }
     } catch (err: any) {
       setError(typeof err?.message === "string" ? err.message : "排盘失败，请稍后再试");
     } finally {
@@ -837,14 +846,16 @@ export default function Step1Page({
               <span className="luxHeroKickerText">LIFE COORDINATES</span>
             </div>
             <h1 className="luxHeroTitle">
-              <span className="luxHeroTitleLine">人生K线</span>
-              <span className="luxHeroTitleLine luxHeroTitleEm">Life Destiny K-Line</span>
+              <span className="luxHeroTitleLine">{mode === "kline" ? "人生K线" : "星盘"}</span>
+              <span className="luxHeroTitleLine luxHeroTitleEm">{mode === "kline" ? "Life Destiny K-Line" : "Zi Wei Astrolabe"}</span>
             </h1>
-            <p className="luxHeroLead">基于专业排盘与量化模型，把人生起伏转换为可视化的百年K线。</p>
+            <p className="luxHeroLead">
+              {mode === "kline" ? "基于专业排盘与量化模型，把人生起伏转换为可视化的百年K线。" : "基于紫微斗数排盘库生成星盘，用于快速查看十二宫与星曜分布。"}
+            </p>
 
             <div className="luxPanel luxPanelWide">
-              <div className="luxPanelTitle">生成我的命盘</div>
-              <div className="luxPanelLead">信息越完整，修正与结果越稳定。文案理性克制，不夸张。</div>
+              <div className="luxPanelTitle">{mode === "kline" ? "生成我的命盘" : "生成我的星盘"}</div>
+              <div className="luxPanelLead">{mode === "kline" ? "信息越完整，修正与结果越稳定。文案理性克制，不夸张。" : "信息越准确，排盘越可核验。请按实际情况填写。"}</div>
 
               {error ? (
                 <div className="luxAlert" role="alert">
@@ -896,7 +907,7 @@ export default function Step1Page({
                 </div>
 
                 <button className="luxBtn luxBtnInkSolid luxBtnBlock" type="submit" disabled={busy}>
-                  {busy ? "排盘生成中..." : "生成我的命盘"}
+                  {busy ? (mode === "kline" ? "排盘生成中..." : "生成中...") : mode === "kline" ? "生成我的命盘" : "生成星盘排盘"}
                 </button>
               </form>
             </div>
