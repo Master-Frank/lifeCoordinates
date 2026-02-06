@@ -1,0 +1,1475 @@
+.luxPanel {
+  border: 1px solid rgba(214, 211, 209, 0.6);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px -12px rgba(12, 10, 9, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  padding: 24px;
+}
+
+.luxPanelWide {
+  padding: 32px;
+  margin-top: 40px;
+}
+
+.luxHeroContentWide {
+  max-width: 720px;
+}
+
+.luxPanelTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #1C1917;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.luxPanelLead {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  color: #57534E;
+  line-height: 1.65;
+  font-size: 16px;
+  max-width: 60ch;
+}
+
+.luxAlert {
+  margin-top: 12px;
+  border: 1px solid rgba(202, 138, 4, 0.45);
+  background: rgba(202, 138, 4, 0.1);
+  color: rgba(12, 10, 9, 0.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.luxBtnBlock {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  margin-top: 32px;
+  height: 60px;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  /* Removed background override to use luxBtnInkSolid style */
+}
+
+.luxForm {
+  margin-top: 20px;
+}
+
+.luxFormList {
+  display: flex;
+  flex-direction: column;
+}
+
+.luxFormRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.55);
+}
+
+.luxFormRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.luxFormLabel {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: #57534E;
+  min-width: 92px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.luxFormInput {
+  width: 100%;
+  max-width: 420px;
+  height: 48px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
+  outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
+}
+
+.luxFormInput:focus {
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
+}
+
+.luxFormInline {
+  display: inline-flex;
+  gap: 4px;
+  background: rgba(231, 229, 228, 0.5);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.6);
+}
+
+.luxPickRow {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.55);
+  background: transparent;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  outline: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+  border-radius: 12px;
+}
+
+.luxPickRow:hover {
+  background: rgba(255, 255, 255, 0.6);
+  padding-left: 12px;
+  padding-right: 12px;
+  margin: 0 -12px;
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.03);
+}
+
+.luxPickRow:active {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(0.99);
+}
+
+.luxPickRow:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.6);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.luxPickLabel {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: #57534E;
+  min-width: 92px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.luxPickValue {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.luxPickPrimary {
+  color: #1C1917;
+  font-weight: 500;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Playfair Display", serif;
+}
+
+.luxPickSecondary {
+  font-size: 13px;
+  color: #78716C;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.luxPickNote {
+  margin-left: 92px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.luxPickChevron {
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(68, 64, 60, 0.6);
+}
+
+.luxFormGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.luxFieldSpan {
+  grid-column: 1 / -1;
+}
+
+.luxLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxText {
+  width: 100%;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
+  outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
+}
+
+.luxText:focus {
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
+}
+
+.luxSelect {
+  width: 100%;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 10px 16px;
+  outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2357534E'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+.luxSelect:focus {
+  background-color: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
+}
+
+.luxRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 8px;
+}
+
+.luxRowTight {
+  grid-template-columns: 1fr 1fr;
+}
+
+.luxCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(68, 64, 60, 0.9);
+  cursor: pointer;
+  user-select: none;
+}
+
+.luxCheck input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214, 211, 209, 0.9);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  position: relative;
+  transition: all 200ms ease;
+}
+
+.luxCheck input:checked {
+  background: #ca8a04;
+  border-color: #ca8a04;
+}
+
+.luxCheck input:checked::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.luxCheck input:focus-visible {
+  outline: 2px solid rgba(202, 138, 4, 0.4);
+  outline-offset: 2px;
+}
+
+.luxCheck:hover input {
+  border-color: rgba(202, 138, 4, 0.6);
+}
+
+.luxCheckInline {
+  gap: 10px;
+}
+
+.luxSheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(12, 10, 9, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.luxSheet {
+  width: min(520px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  box-shadow: 
+    0 20px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  padding: 24px;
+  max-height: calc(100vh - 28px);
+  min-height: 400px;
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.luxSheetTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.luxSheetTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(12, 10, 9, 0.95);
+}
+
+.luxSheetClose {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(12, 10, 9, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  color: rgba(12, 10, 9, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  padding-bottom: 2px;
+  transition: all 200ms ease;
+}
+
+.luxSheetClose:hover {
+  background: rgba(12, 10, 9, 0.05);
+  color: rgba(12, 10, 9, 0.9);
+  transform: rotate(90deg);
+}
+
+.luxSheetTabs {
+  display: flex;
+  background: rgba(12, 10, 9, 0.04);
+  padding: 4px;
+  border-radius: 999px;
+  margin-top: 16px;
+  align-self: center;
+}
+
+.luxSheetTabsSlim {
+  margin-top: 12px;
+  padding: 3px;
+}
+
+.luxSheetTab {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  color: rgba(12, 10, 9, 0.6);
+  transition: all 200ms ease;
+  min-width: 80px;
+}
+
+.luxSheetTab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.luxSheetTabOn {
+  background: #fff;
+  color: rgba(12, 10, 9, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.luxSheetRow {
+  margin-top: 20px;
+}
+
+.luxSheetActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(12, 10, 9, 0.06);
+}
+
+.luxWheelGrid {
+  margin-top: 24px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px;
+  mask-image: linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent);
+}
+
+.luxWheelCol {
+  flex: 1;
+  min-width: 80px;
+  position: relative;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  height: 248px;
+  display: flex;
+  flex-direction: column;
+}
+
+.luxWheelBody {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.luxWheelBody::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: rgba(202, 138, 4, 0.08);
+  border: 1px solid rgba(202, 138, 4, 0.15);
+  pointer-events: none;
+}
+
+.luxWheelHeader {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.5);
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.luxWheelScroller {
+  position: absolute;
+  inset: 0;
+  overflow: hidden; /* 禁用原生滚动条，完全由 JS 接管 */
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 86px 0; /* (212px height / 2) - 20px item half */
+  overscroll-behavior: contain;
+}
+
+.luxWheelScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.luxWheelItem {
+  height: 40px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  scroll-snap-align: center;
+  color: rgba(12, 10, 9, 0.4);
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 150ms ease;
+  opacity: 0.6;
+}
+
+.luxWheelItem:hover {
+  color: rgba(12, 10, 9, 0.8);
+  opacity: 1;
+}
+
+.luxWheelItemOn {
+  color: rgba(12, 10, 9, 0.95);
+  font-weight: 600;
+  font-size: 17px;
+  opacity: 1;
+  background: transparent;
+}
+
+.luxSearchWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.luxSearchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(68, 64, 60, 0.5);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luxSearchInput {
+  margin-top: 0;
+  padding-left: 36px;
+  height: 42px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 200ms ease;
+}
+
+.luxSearchInput:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(202, 138, 4, 0.5);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.1);
+}
+
+.luxSearchStatus {
+  margin-top: 6px;
+  min-height: 20px;
+  transition: min-height 150ms ease;
+  display: flex;
+  align-items: flex-start;
+}
+
+.luxSearchResults {
+  margin-top: 12px;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.luxSearchResultItem {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.luxSearchResultItem:last-child {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.luxSearchResultItem:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.luxSearchResultItem:active {
+  background: rgba(202, 138, 4, 0.1);
+  transform: translateX(0);
+}
+
+.luxSearchResultText {
+  color: rgba(12, 10, 9, 0.92);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.luxSearchEmpty {
+  margin-top: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 14px;
+}
+
+.luxSearchEmptyText {
+  color: rgba(68, 64, 60, 0.75);
+}
+
+.luxPickerColumns {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.luxPickerCol {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 248px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.luxPickerBody {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.luxPickerBody::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: rgba(202, 138, 4, 0.08);
+  border: 1px solid rgba(202, 138, 4, 0.15);
+  pointer-events: none;
+}
+
+.luxPickerHead {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.78);
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.luxPickerList {
+  position: absolute;
+  inset: 0;
+  overflow: hidden; /* 禁用原生滚动条 */
+  padding: 86px 0; /* (212px height / 2) - 20px item half */
+  overscroll-behavior: contain;
+}
+
+.luxPickerList::-webkit-scrollbar {
+  display: none;
+}
+
+.luxPickerItem {
+  width: 100%;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  padding: 0 12px;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: rgba(12, 10, 9, 0.6);
+  scroll-snap-align: center;
+  transition: all 150ms ease;
+}
+
+.luxPickerItemOn {
+  color: rgba(12, 10, 9, 0.95);
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.luxPickerEmpty {
+  padding: 14px 12px;
+  text-align: center;
+  color: rgba(68, 64, 60, 0.78);
+}
+
+.luxToggle {
+  display: inline-flex;
+  gap: 4px;
+  background: rgba(231, 229, 228, 0.5);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.6);
+}
+
+.luxToggleBtn {
+  border: 0;
+  background: transparent;
+  color: #57534E;
+  border-radius: 999px;
+  padding: 8px 24px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-width: 72px;
+}
+
+.luxToggleBtnOn {
+  background: #fff;
+  color: #1C1917;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+.luxHint {
+  margin-top: 12px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: rgba(250, 250, 249, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxSuggest {
+  position: relative;
+}
+
+.luxSuggestList {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  max-height: 240px;
+  overflow: auto;
+  z-index: 10;
+}
+
+.luxSuggestItem {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.luxSuggestItem:hover {
+  background: rgba(250, 250, 249, 0.9);
+}
+
+.luxSuggestName {
+  font-weight: 600;
+}
+
+.luxSuggestMeta {
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+}
+
+.luxSteps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.luxStep {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.luxStepActive {
+  border-color: rgba(202, 138, 4, 0.55);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.14);
+}
+
+.luxStepNum {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxStepText {
+  font-family: "Playfair Display", serif;
+}
+
+.luxStepTrail {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.luxStepTrailItem {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxStepTrailItemOn {
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxCardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.luxCardGridSplit {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.luxCardGridSplit > .luxCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.luxCard {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(12, 10, 9, 0.08), 0 2px 8px rgba(12, 10, 9, 0.04);
+  padding: 20px;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.luxCard.luxGradientA {
+  background: radial-gradient(560px 320px at 10% 14%, rgba(202, 138, 4, 0.14), transparent 62%),
+    radial-gradient(380px 240px at 92% 8%, rgba(12, 10, 9, 0.05), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientB {
+  background: radial-gradient(620px 360px at 84% 16%, rgba(202, 138, 4, 0.15), transparent 60%),
+    radial-gradient(320px 220px at 12% 88%, rgba(12, 10, 9, 0.05), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientC {
+  background: radial-gradient(520px 320px at 18% 72%, rgba(202, 138, 4, 0.16), transparent 62%),
+    radial-gradient(360px 240px at 86% 28%, rgba(12, 10, 9, 0.05), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientD {
+  background: radial-gradient(660px 360px at 70% 78%, rgba(202, 138, 4, 0.14), transparent 60%),
+    radial-gradient(340px 240px at 14% 22%, rgba(12, 10, 9, 0.06), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientE {
+  background: radial-gradient(600px 340px at 20% 20%, rgba(202, 138, 4, 0.15), transparent 60%),
+    radial-gradient(420px 260px at 88% 80%, rgba(12, 10, 9, 0.05), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientF {
+  background: radial-gradient(640px 360px at 76% 28%, rgba(202, 138, 4, 0.14), transparent 60%),
+    radial-gradient(360px 240px at 10% 82%, rgba(12, 10, 9, 0.06), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard.luxGradientG {
+  background: radial-gradient(620px 340px at 14% 26%, rgba(202, 138, 4, 0.15), transparent 60%),
+    radial-gradient(420px 260px at 90% 70%, rgba(12, 10, 9, 0.05), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.95));
+}
+
+.luxCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(12, 10, 9, 0.12), 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxCardBlock {
+  padding: 20px;
+}
+
+.luxCardBlock .luxCardTitle {
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.luxCardTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.6);
+  color: rgba(12, 10, 9, 0.95);
+}
+
+.luxCardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.luxCardTitleIcon {
+  width: 18px;
+  height: 18px;
+  color: rgba(12, 10, 9, 0.78);
+}
+
+.luxInsightScore {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+
+.luxInsightScoreNum {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(12, 10, 9, 0.96);
+}
+
+.luxInsightScoreUnit {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.74);
+}
+
+.luxInsightText {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(68, 64, 60, 0.9);
+}
+
+.luxMetaList {
+  margin-top: 4px;
+}
+
+.luxMetaRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(214, 211, 209, 0.5);
+  transition: background 150ms ease;
+}
+
+.luxMetaRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.luxMetaRow:hover {
+  background: rgba(250, 250, 249, 0.5);
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 8px;
+}
+
+.luxMetaKey {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+  font-weight: 500;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.luxMetaVal {
+  font-size: 14px;
+  color: rgba(12, 10, 9, 0.94);
+  text-align: right;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.luxBig {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(12, 10, 9, 0.96);
+}
+
+.luxSmall {
+  color: rgba(68, 64, 60, 0.86);
+  font-size: 13px;
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.luxTableWrap {
+  overflow: auto;
+  padding: 8px 0 4px;
+  margin-top: 4px;
+}
+
+.luxTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.luxTable th,
+.luxTable td {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+.luxTable th {
+  background: rgba(250, 250, 249, 0.8);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+}
+
+.luxTable td {
+  font-size: 13px;
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxTdStrong {
+  font-weight: 600;
+}
+
+.luxTag {
+  display: inline-block;
+  margin-left: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  padding: 2px 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.luxChart {
+  width: 100%;
+  height: 360px;
+}
+
+.luxChartHint {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  color: rgba(68, 64, 60, 0.75);
+  font-size: 12px;
+  line-height: 1.5;
+  background: rgba(250, 250, 249, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.luxActionsWrap {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.luxActionsStack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.luxConfirmStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.luxResultStack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.luxResultStack .luxCardGrid {
+  margin-top: 0;
+}
+
+.luxConfirmHero {
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: radial-gradient(620px 360px at 12% 16%, rgba(202, 138, 4, 0.16), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+  box-shadow: 0 14px 42px rgba(12, 10, 9, 0.1), 0 2px 8px rgba(12, 10, 9, 0.04);
+}
+
+.luxConfirmHero.luxGradientA {
+  background: radial-gradient(540px 320px at 6% 12%, rgba(202, 138, 4, 0.18), transparent 62%),
+    radial-gradient(360px 220px at 92% 6%, rgba(12, 10, 9, 0.07), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+}
+
+.luxConfirmHeroTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.luxConfirmHeroKicker {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.75);
+}
+
+.luxConfirmHeroTitle {
+  margin-top: 6px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: -0.02em;
+}
+
+.luxConfirmHeroGender {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(68, 64, 60, 0.65);
+  letter-spacing: 0;
+  margin-left: 8px;
+}
+
+.luxConfirmHeroSub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(68, 64, 60, 0.78);
+}
+
+.luxConfirmHeroBadge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.82);
+  white-space: nowrap;
+}
+
+.luxConfirmMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.luxConfirmMetaItem {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: rgba(255, 255, 255, 0.95);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.luxConfirmMetaItem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxConfirmMetaLabel {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.7);
+}
+
+.luxConfirmMetaValue {
+  margin-top: 6px;
+  font-size: 14px;
+  color: rgba(12, 10, 9, 0.92);
+}
+
+.luxCardSpan {
+  grid-column: 1 / -1;
+}
+
+.luxCardHero {
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  background: radial-gradient(620px 360px at 12% 16%, rgba(202, 138, 4, 0.16), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+  box-shadow: 0 14px 42px rgba(12, 10, 9, 0.1), 0 2px 8px rgba(12, 10, 9, 0.04);
+}
+
+.luxCardHero.luxGradientB {
+  background: radial-gradient(680px 360px at 84% 18%, rgba(202, 138, 4, 0.16), transparent 60%),
+    radial-gradient(420px 260px at 8% 88%, rgba(12, 10, 9, 0.06), transparent 62%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+}
+
+.luxCardHero.luxGradientC {
+  background: radial-gradient(520px 300px at 18% 72%, rgba(202, 138, 4, 0.18), transparent 62%),
+    radial-gradient(380px 240px at 92% 30%, rgba(12, 10, 9, 0.05), transparent 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+}
+
+.luxCardHero.luxGradientD {
+  background: radial-gradient(600px 360px at 72% 82%, rgba(202, 138, 4, 0.16), transparent 60%),
+    radial-gradient(340px 220px at 12% 18%, rgba(12, 10, 9, 0.07), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 249, 0.94));
+}
+
+.luxCardHero .luxCardTitle {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(12, 10, 9, 0.88);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxCaseBanner {
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(214, 211, 209, 0.35);
+  background: radial-gradient(820px 420px at 18% 20%, rgba(202, 138, 4, 0.22), transparent 58%),
+    radial-gradient(760px 520px at 72% 12%, rgba(12, 10, 9, 0.6), transparent 60%),
+    linear-gradient(140deg, rgba(12, 10, 9, 0.96), rgba(12, 10, 9, 0.82));
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 60px rgba(12, 10, 9, 0.22);
+}
+
+.luxCaseTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+.luxCaseMeta {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.luxShareBox {
+  border: 1px dashed rgba(214, 211, 209, 0.75);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 16px 0 0;
+  background: rgba(250, 250, 249, 0.6);
+}
+
+.luxShareTitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.86);
+}
+
+.luxShareLink {
+  margin-top: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.luxDetails {
+  margin-top: 12px;
+}
+
+.luxDetail {
+  border: 1px solid rgba(214, 211, 209, 0.85);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.luxDetail:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 10, 9, 0.06);
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.luxDetailSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 150ms ease;
+}
+
+.luxDetailSummary:hover {
+  background: rgba(250, 250, 249, 0.6);
+}
+
+.luxDetailScore {
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(12, 10, 9, 0.94);
+  font-family: "Playfair Display", serif;
+}
+
+.luxDetailBody {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(214, 211, 209, 0.6);
+  background: rgba(250, 250, 249, 0.4);
+}
+
+.luxMiniTitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(68, 64, 60, 0.88);
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
+}
+
+.luxSplit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.luxList {
+  margin-top: 8px;
+}
+
+.luxListRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(214, 211, 209, 0.75);
+  border-radius: 10px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.luxListRow:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(12, 10, 9, 0.05);
+  border-color: rgba(202, 138, 4, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.luxListScore {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgba(12, 10, 9, 0.94);
+  font-family: "Playfair Display", serif;
+}
+
+.luxActions {
+  padding: 16px 0 0;
+  margin-top: 4px;
+}
+
+.luxActionsStack {
+  gap: 12px;
+}
+

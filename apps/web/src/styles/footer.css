@@ -1,0 +1,243 @@
+.luxFooter {
+  padding: 100px 0 48px;
+  border-top: 1px solid rgba(214, 211, 209, 0.6);
+  background: #FAFAF9;
+}
+
+.luxFooterTop {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 56px;
+  border-bottom: 1px solid rgba(214, 211, 209, 0.6);
+}
+
+.luxFooterTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 36px;
+  letter-spacing: -0.02em;
+  color: #1C1917;
+}
+
+.luxFooterLead {
+  margin-top: 12px;
+  color: rgba(68, 64, 60, 0.85);
+  max-width: 56ch;
+}
+
+.luxSubscribe {
+  display: flex;
+  width: min(620px, 100%);
+  justify-content: center;
+  gap: 0;
+}
+
+.luxInput {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border-radius: 12px 0 0 12px;
+  border: 1px solid rgba(214, 211, 209, 0.7);
+  border-right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 16px;
+  outline: none;
+  font-size: 15px;
+  transition: all 200ms ease;
+  color: #1C1917;
+}
+
+.luxInput:focus {
+  background: #fff;
+  border-color: rgba(202, 138, 4, 0.6);
+  box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.12);
+  z-index: 2;
+}
+
+.luxFooterSubscribeBtn {
+  border-radius: 999px;
+  padding-left: 42px;
+  padding-right: 42px;
+  /* Use styles from luxBtnInkSolid */
+}
+
+.luxFooterGrid {
+  padding-top: 72px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 72px;
+  align-items: start;
+}
+
+.luxFooterBrandName {
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1C1917;
+}
+
+.luxFooterBrandNote {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #57534E;
+  max-width: 280px;
+}
+
+.luxFooterColTitle {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1C1917;
+  margin-bottom: 6px;
+}
+
+.luxFooterCol {
+  display: grid;
+  gap: 14px;
+}
+
+.luxFooterLink {
+  text-decoration: none;
+  color: #57534E;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: all 180ms ease;
+  display: inline-block;
+}
+
+.luxFooterLink:hover {
+  color: #CA8A04;
+  transform: translateX(2px);
+}
+
+.luxFooterBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+  padding-top: 32px;
+  border-top: 1px solid rgba(229, 229, 229, 1);
+}
+
+.luxFooterCopy {
+  color: rgba(107, 107, 107, 1);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.luxFooterSocial {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.luxSocial {
+  width: 20px;
+  height: 20px;
+  display: block;
+  text-decoration: none;
+  color: rgba(107, 107, 107, 1);
+  transition: color 180ms ease;
+}
+
+.luxSocial:hover {
+  color: rgba(26, 26, 26, 1);
+}
+
+.luxSocialIcon {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .luxBtnPrimary:hover {
+    transform: none;
+  }
+  .luxBtnInkSolid:hover {
+    transform: none;
+  }
+  .luxProductCard:hover .luxProductImg {
+    transform: none;
+  }
+}
+
+@media (min-width: 860px) {
+  .luxNavLinks {
+    display: flex;
+  }
+  .luxStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .luxStat {
+    border-left: 0;
+  }
+  .luxStat:not(:first-child) {
+    border-left: 1px solid rgba(214, 211, 209, 0.85);
+  }
+  .luxGrid4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .luxStoryGrid {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 22px;
+  }
+  .luxGrid3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .luxMemberGrid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+  .luxFormGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .luxFieldSpan {
+    grid-column: span 2;
+  }
+  .luxCardGrid:not(.luxCardGridSplit) {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  .luxCardGridSplit {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+  }
+  .luxConfirmMetaGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .luxSplit {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .luxFooterTop {
+    grid-template-columns: 1.2fr 0.8fr;
+    justify-items: stretch;
+    text-align: left;
+    align-items: end;
+  }
+  .luxSubscribe {
+    justify-content: flex-end;
+  }
+  .luxFooterGrid {
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+  .luxFooterBottom {
+    flex-direction: row;
+  }
+}
+

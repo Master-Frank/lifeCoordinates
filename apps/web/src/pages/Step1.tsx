@@ -324,22 +324,22 @@ export default function Step1Page({
   const [gender, setGender] = useState<BirthInput["gender"]>(initial?.gender ?? "male");
 
   const [calendar, setCalendar] = useState<BirthInput["calendar"]>(initial?.calendar ?? "solar");
-  const [year, setYear] = useState<number>(() => initial?.date.year ?? new Date().getFullYear());
-  const [month, setMonth] = useState<number>(() => initial?.date.month ?? new Date().getMonth() + 1);
-  const [day, setDay] = useState<number>(() => initial?.date.day ?? new Date().getDate());
-  const [isLeapMonth, setIsLeapMonth] = useState(Boolean(initial?.date.isLeapMonth));
+  const [year, setYear] = useState<number>(() => initial?.date?.year ?? new Date().getFullYear());
+  const [month, setMonth] = useState<number>(() => initial?.date?.month ?? new Date().getMonth() + 1);
+  const [day, setDay] = useState<number>(() => initial?.date?.day ?? new Date().getDate());
+  const [isLeapMonth, setIsLeapMonth] = useState(Boolean(initial?.date?.isLeapMonth));
 
-  const [timeMode, setTimeMode] = useState<BirthInput["time"]["mode"]>(initial?.time.mode ?? "exact");
-  const [hour, setHour] = useState<number>(() => (initial?.time.mode === "exact" ? initial.time.hour : new Date().getHours()));
-  const [minute, setMinute] = useState<number>(() => (initial?.time.mode === "exact" ? initial.time.minute : new Date().getMinutes()));
+  const [timeMode, setTimeMode] = useState<BirthInput["time"]["mode"]>(initial?.time?.mode ?? "exact");
+  const [hour, setHour] = useState<number>(() => (initial?.time?.mode === "exact" ? initial.time.hour : new Date().getHours()));
+  const [minute, setMinute] = useState<number>(() => (initial?.time?.mode === "exact" ? initial.time.minute : new Date().getMinutes()));
   const [timeLabel, setTimeLabel] = useState<Extract<BirthInput["time"], { mode: "segment" }>["label"]>(
-    initial?.time.mode === "segment" ? initial.time.label : "子时"
+    initial?.time?.mode === "segment" ? initial.time.label : "子时"
   );
 
-  const [province, setProvince] = useState(initial?.location.province ?? "");
-  const [city, setCity] = useState(initial?.location.city ?? "");
+  const [province, setProvince] = useState(initial?.location?.province ?? "");
+  const [city, setCity] = useState(initial?.location?.city ?? "");
   const [district, setDistrict] = useState("");
-  const [longitude, setLongitude] = useState<number | null>(initial?.location.longitude ?? null);
+  const [longitude, setLongitude] = useState<number | null>(initial?.location?.longitude ?? null);
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
