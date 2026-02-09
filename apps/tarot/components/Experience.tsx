@@ -4,7 +4,7 @@ import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { InputMode, GestureType, DrawResult } from '../types';
 import { useTarot } from '../services/TarotContext';
-import { CARD_WIDTH, CARD_HEIGHT } from '../constants';
+import { CARD_WIDTH, CARD_HEIGHT, MAJOR_ARCANA } from '../constants';
 import { AshParticles } from './AshParticles';
 
 interface ExperienceProps {
@@ -16,6 +16,9 @@ interface ExperienceProps {
 type InteractionMode = 'CAROUSEL' | 'HOVERING' | 'REVEALED' | 'ASH' | 'HISTORY_VIEW';
 
 const cardGeometry = new THREE.BoxGeometry(CARD_WIDTH, CARD_HEIGHT, 0.02);
+const fallbackFrontUrl = 'cards/ar00.jpg';
+const preloadUrls = MAJOR_ARCANA.map(card => card.image_url);
+preloadUrls.forEach(url => useTexture.preload(url));
 
 const CardMesh: React.FC<{
   position: THREE.Vector3;
@@ -29,7 +32,7 @@ const CardMesh: React.FC<{
   visible: boolean;
   onClick?: () => void;
 }> = ({ position, rotation, frontUrl, backTexture, isReversed: _isReversed, isRevealed: _isRevealed, onPointerOver, onPointerOut, visible, onClick }) => {
-  const validFrontUrl = frontUrl || "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg";
+  const validFrontUrl = frontUrl || fallbackFrontUrl;
   const frontTexture = useTexture(validFrontUrl);
 
   const materials = useMemo(() => [

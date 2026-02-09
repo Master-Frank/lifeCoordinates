@@ -17,3 +17,10 @@ Thumbs.db
 .trae/rules/
 .trae/skills/
 openspec/
+apps/web/public/tarot/
+coverage/
+.eslintcache
+*.tsbuildinfo
+**/.vite/
+*.swp
+*.swo

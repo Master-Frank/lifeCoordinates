@@ -18,6 +18,9 @@ export const HandTracker: React.FC<HandTrackerProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
   const requestRef = useRef<number>(0);
+  const lastCandidateRef = useRef<GestureType>(GestureType.NONE);
+  const stableCountRef = useRef(0);
+  const lastEmittedRef = useRef<GestureType>(GestureType.NONE);
 
   useEffect(() => {
     const initMediaPipe = async () => {
@@ -82,11 +85,26 @@ export const HandTracker: React.FC<HandTrackerProps> = ({
         const landmarks = results.landmarks[0];
         processLandmarks(landmarks);
       } else {
-        onGestureDetected(GestureType.NONE);
+        confirmGesture(GestureType.NONE);
       }
     }
 
     requestRef.current = requestAnimationFrame(predictWebcam);
+  };
+
+  const confirmGesture = (gesture: GestureType) => {
+    if (lastCandidateRef.current === gesture) {
+      stableCountRef.current += 1;
+    } else {
+      lastCandidateRef.current = gesture;
+      stableCountRef.current = 1;
+    }
+
+    if (stableCountRef.current < 3) return;
+    if (lastEmittedRef.current === gesture) return;
+
+    lastEmittedRef.current = gesture;
+    onGestureDetected(gesture);
   };
 
   const processLandmarks = (landmarks: { x: number; y: number; z: number }[]) => {
@@ -106,26 +124,46 @@ export const HandTracker: React.FC<HandTrackerProps> = ({
 
     onHandMoved({ x, y });
 
-    const thumbIndexDist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+    const wrist = landmarks[0];
+    const middleMcp = landmarks[9];
+    const handScale = Math.max(
+      0.0001,
+      Math.hypot(middleMcp.x - wrist.x, middleMcp.y - wrist.y)
+    );
+    const thumbIndexDist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y) / handScale;
 
     const middleTip = landmarks[12];
     const ringTip = landmarks[16];
     const pinkyTip = landmarks[20];
     const tips = [indexTip, middleTip, ringTip, pinkyTip];
 
+    const indexPip = landmarks[6];
+    const middlePip = landmarks[10];
+    const ringPip = landmarks[14];
+    const pinkyPip = landmarks[18];
+    const indexExtended = indexTip.y < indexPip.y;
+    const middleExtended = middleTip.y < middlePip.y;
+    const ringExtended = ringTip.y < ringPip.y;
+    const pinkyExtended = pinkyTip.y < pinkyPip.y;
     const isFist = tips.every(tip => tip.y > landmarks[9].y);
+    const isPoint = indexExtended && !middleExtended && !ringExtended && !pinkyExtended;
 
-    if (thumbIndexDist < 0.05 && !isFist) {
-      onGestureDetected(GestureType.PINCH);
+    if (thumbIndexDist < 0.35 && !isFist) {
+      confirmGesture(GestureType.PINCH);
       return;
     }
 
     if (isFist) {
-      onGestureDetected(GestureType.FIST);
+      confirmGesture(GestureType.FIST);
       return;
     }
 
-    onGestureDetected(GestureType.OPEN);
+    if (isPoint) {
+      confirmGesture(GestureType.POINT);
+      return;
+    }
+
+    confirmGesture(GestureType.OPEN);
   };
 
   return (
